@@ -1,0 +1,12 @@
+:host {
+  display: block;
+}
+
+/* Custom Utilities that Tailwind doesn't have by default */
+.scrollbar-hide::-webkit-scrollbar {
+    display: none;
+}
+.scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}

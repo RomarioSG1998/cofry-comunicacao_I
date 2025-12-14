@@ -1,0 +1,116 @@
+<div class="min-h-screen bg-[#F0F4F8] font-sans text-slate-900 pb-20 relative overflow-x-hidden">
+  
+  <!-- Background Gradient Mesh (Top Left) -->
+  <div class="absolute top-0 left-0 w-full h-[500px] bg-gradient-to-b from-emerald-50/80 to-transparent pointer-events-none z-0"></div>
+  <div class="absolute -top-20 -left-20 w-96 h-96 bg-emerald-200/20 rounded-full blur-3xl pointer-events-none z-0"></div>
+
+    <!-- Navbar removed: use shared `app-navbar` component when provided -->
+    <!-- <app-navbar> will be inserted here once the shared navbar is ready -->
+
+  <main class="relative z-10 p-6 max-w-5xl mx-auto space-y-8 mt-4">
+    
+    <!-- Back Arrow Button -->
+    <div class="flex items-center mb-4 pl-2">
+        <button class="flex items-center gap-2 text-slate-500 hover:text-emerald-600 transition-colors group">
+            <div class="p-2 rounded-full bg-white group-hover:bg-white/80 shadow-sm border border-slate-100 transition-all">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+            </div>
+            <span class="text-sm font-bold text-slate-600 group-hover:text-emerald-700">Voltar para Home</span>
+        </button>
+    </div>
+
+    <!-- Hero Balance Card -->
+    <section class="rounded-[2.5rem] bg-[#0F172A] p-10 text-white shadow-xl shadow-slate-200/50 flex flex-col justify-center h-48 relative overflow-hidden">
+         <!-- Subtle glow effect inside card -->
+         <div class="absolute right-0 top-0 w-64 h-64 bg-slate-800/30 rounded-full blur-3xl -mr-16 -mt-16"></div>
+         
+         <div class="relative z-10">
+           <span class="text-slate-400 text-sm font-medium mb-1 block">Saldo disponível</span>
+           <div class="flex items-center gap-4">
+             <h2 class="text-4xl md:text-5xl font-extrabold tracking-tight">
+               R$ 24.500,00
+             </h2>
+             <!-- Eye Icon Toggle -->
+             <button class="text-slate-500 hover:text-white transition-colors mt-2">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+             </button>
+           </div>
+         </div>
+    </section>
+
+    <!-- Big Actions Cards (Grid) -->
+    <section class="grid grid-cols-2 md:grid-cols-4 gap-6">
+        @for (action of pixActions; track action.label) {
+          <button (click)="onActionClick(action.label)" class="bg-white rounded-[2rem] p-6 h-48 flex flex-col items-center justify-center gap-4 shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.08)] hover:-translate-y-1 transition-all duration-300 border border-slate-50 group">
+          
+          <!-- Icon Circle -->
+          <div class="w-16 h-16 rounded-full flex items-center justify-center transition-colors"
+               [ngClass]="action.highlight ? 'bg-emerald-100 text-emerald-600' : 'bg-emerald-50 text-emerald-500 group-hover:bg-emerald-100'">
+            <!-- Use getSafeIcon to bypass Angular security for SVGs -->
+            <div [innerHTML]="getSafeIcon(action.icon)" class="w-8 h-8"></div>
+          </div>
+          
+          <span class="font-bold text-slate-700 text-sm md:text-base">{{ action.label }}</span>
+        </button>
+      }
+    </section>
+
+    <!-- Transfer Section (Input + Button) -->
+    <section class="bg-white rounded-[2rem] p-8 shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-50">
+      <h3 class="font-bold text-slate-800 text-lg mb-6 flex items-center gap-3">
+        <svg class="text-emerald-500 -rotate-45" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+        Transferir para nova chave
+      </h3>
+      
+      <div class="flex flex-col md:flex-row gap-4">
+        <input 
+          type="text" 
+          placeholder="CPF, Celular, E-mail ou Chave Aleatória" 
+          class="flex-1 bg-gray-50 border border-gray-100 text-slate-800 text-base rounded-2xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent p-5 placeholder:text-gray-400 outline-none transition-all hover:bg-white"
+        >
+        <button class="bg-[#00A868] hover:bg-[#008f58] text-white font-bold py-4 px-10 rounded-2xl transition-all shadow-lg shadow-emerald-200 active:scale-95 whitespace-nowrap">
+          Continuar
+        </button>
+      </div>
+    </section>
+
+    <!-- Contacts Section -->
+    <section class="pt-4">
+      <h3 class="font-bold text-slate-800 text-lg mb-6 ml-2">Contatos Recentes</h3>
+      
+      <div class="flex gap-8 overflow-x-auto pb-8 px-2 scrollbar-hide">
+        
+        <!-- Contact Items (Initials Style) -->
+        @for (contact of contacts; track contact.firstName) {
+          <div class="flex flex-col items-center gap-3 group cursor-pointer min-w-[80px]">
+            <div class="w-20 h-20 rounded-full flex items-center justify-center text-xl font-bold text-slate-700 transition-all duration-300 shadow-sm group-hover:scale-105 group-hover:shadow-md border-4 border-white"
+                 [ngClass]="contact.isNew ? 'bg-white border-dashed border-emerald-300 text-emerald-500' : 'bg-gray-100'">
+                
+                <span *ngIf="!contact.isNew">{{ contact.initials }}</span>
+                <svg *ngIf="contact.isNew" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+            </div>
+            
+            <div class="text-center">
+                <p class="font-bold text-sm text-slate-700 leading-tight">{{ contact.firstName }}</p>
+                <p class="text-xs text-slate-400 font-medium mt-0.5">{{ contact.lastName }}</p>
+            </div>
+          </div>
+        }
+      </div>
+    </section>
+
+  </main>
+
+   <!-- Floating Action Button (Corner) -->
+   <div class="fixed bottom-6 right-6 z-50">
+     <button class="w-14 h-14 bg-[#0F172A] rounded-2xl flex items-center justify-center text-white shadow-2xl hover:scale-105 transition-transform">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="3" width="7" height="7" rx="1" />
+          <rect x="14" y="3" width="7" height="7" rx="1" />
+          <rect x="14" y="14" width="7" height="7" rx="1" />
+          <rect x="3" y="14" width="7" height="7" rx="1" />
+        </svg>
+     </button>
+   </div>
+
+</div>

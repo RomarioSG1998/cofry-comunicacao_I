@@ -1,0 +1,371 @@
+<div class="min-h-screen bg-slate-50 text-slate-900 font-sans selection:bg-emerald-500 selection:text-white overflow-x-hidden relative">
+
+    <div class="fixed top-[-10%] left-[-10%] w-[500px] h-[500px] bg-emerald-300/30 rounded-full blur-[120px] pointer-events-none mix-blend-multiply z-0"></div>
+    <div class="fixed bottom-[10%] right-[-5%] w-[600px] h-[600px] bg-blue-200/40 rounded-full blur-[120px] pointer-events-none mix-blend-multiply z-0"></div>
+
+    <nav *ngIf="!isLoggedIn()" class="relative z-50 bg-white/80 backdrop-blur-md border-b border-slate-200/60 px-6 py-4 sticky top-0">
+        <div class="max-w-7xl mx-auto flex items-center justify-between">
+            <div class="flex items-center gap-2 cursor-pointer group" (click)="setView('landing')">
+                <div class="w-8 h-8 bg-gradient-to-tr from-emerald-500 to-emerald-700 rounded-lg flex items-center justify-center shadow-lg shadow-emerald-500/30 group-hover:shadow-emerald-500/50 transition-all">
+                    <img src="logo.svg" alt="Logo Cofry" class="w-5 h-5 object-contain drop-shadow-sm">
+                </div>
+                <span class="text-xl font-bold tracking-tight text-slate-800">Cofry</span>
+            </div>
+
+            <div class="hidden md:flex items-center gap-8 text-sm font-medium text-slate-600">
+                <button (click)="setView('landing')" [class.text-emerald-600]="currentView === 'landing'" class="hover:text-emerald-600 transition-colors">Home</button>
+                <button (click)="setView('about')" [class.text-emerald-600]="currentView === 'about'" class="hover:text-emerald-600 transition-colors">Sobre</button>
+                <button (click)="setView('services')" [class.text-emerald-600]="currentView === 'services'" class="hover:text-emerald-600 transition-colors">Serviços</button>
+                <button (click)="setView('prices')" [class.text-emerald-600]="currentView === 'prices'" class="hover:text-emerald-600 transition-colors">Preços</button>
+            </div>
+
+            <div class="hidden md:block">
+                <button (click)="setView('login')" class="px-6 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-semibold rounded-full transition-all shadow-lg shadow-emerald-600/20 hover:shadow-emerald-600/40 transform hover:-translate-y-0.5 flex items-center gap-2">
+                    Acessar
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path><polyline points="10 17 15 12 10 7"></polyline><line x1="15" y1="12" x2="3" y2="12"></line></svg>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <nav *ngIf="isLoggedIn()" class="relative z-50 bg-white/90 backdrop-blur-md border-b border-slate-200/60 px-6 py-4 sticky top-0">
+        <div class="max-w-7xl mx-auto flex items-center justify-between">
+            <div class="flex items-center gap-2 cursor-pointer" (click)="setView('dashboard')">
+                <div class="w-8 h-8 bg-gradient-to-tr from-emerald-500 to-emerald-700 rounded-lg flex items-center justify-center shadow-lg shadow-emerald-500/20">
+                    <img src="logo.png" alt="Logo Cofry" class="w-5 h-5 object-contain drop-shadow-sm">
+                </div>
+                <span class="text-xl font-bold tracking-tight text-slate-800">Cofry</span>
+            </div>
+            <div class="hidden md:flex items-center gap-1 bg-slate-100/50 p-1.5 rounded-full border border-slate-200/60">
+                <button (click)="setView('dashboard')" [class.bg-white]="currentView === 'dashboard'" class="px-4 py-1.5 text-sm font-medium text-slate-500 rounded-full transition-all">Home</button>
+                <button (click)="setView('pix')" [class.bg-white]="currentView === 'pix'" class="px-4 py-1.5 text-sm font-medium text-slate-500 rounded-full transition-all">Pix</button>
+                <button class="px-4 py-1.5 text-sm font-medium text-slate-500 hover:text-slate-900 rounded-full transition-all">Cartões</button>
+            </div>
+            <div class="flex items-center gap-4">
+                <div class="flex items-center gap-3 pl-4 border-l border-slate-200">
+                    <div class="text-right hidden sm:block">
+                        <p class="text-xs font-bold text-slate-700">Maria Silva</p>
+                        <button (click)="logout()" class="text-[10px] text-red-500 hover:underline cursor-pointer">Sair</button>
+                    </div>
+                    <div class="w-9 h-9 rounded-full bg-gradient-to-br from-emerald-100 to-teal-200 border-2 border-white shadow-sm flex items-center justify-center text-emerald-700 font-bold text-sm">MS</div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="relative z-10 min-h-[calc(100vh-80px)]">
+
+        <main *ngIf="['landing', 'login', 'signup'].includes(currentView)" class="max-w-7xl mx-auto px-6 pt-10 pb-20 md:pt-20 lg:flex lg:items-center lg:justify-between animate-fade-in-up">
+
+            <div class="lg:w-1/2 space-y-8">
+                <div>
+                    <h1 class="text-5xl md:text-6xl lg:text-7xl font-bold leading-[1.1] tracking-tight text-slate-900">
+                        Pague, invista & <br />
+                        <span class="text-transparent bg-clip-text bg-gradient-to-r from-emerald-600 to-teal-500">guarde dinheiro</span> <br />
+                        em um único banco
+                    </h1>
+                </div>
+                <p class="text-slate-600 text-lg max-w-md leading-relaxed">
+                    Economize seu tempo com uma gestão financeira inteligente. Aproveite descontos exclusivos em diversos produtos e parceiros direto na sua conta.
+                </p>
+
+                <div class="flex flex-wrap gap-4">
+                    <button (click)="setView('signup')" class="px-8 py-4 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold rounded-2xl transition-all shadow-xl shadow-emerald-600/25 flex items-center gap-2 group hover:-translate-y-1">
+                        Criar Conta
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="group-hover:translate-x-1 transition-transform"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="8.5" cy="7" r="4"></circle><line x1="20" y1="8" x2="20" y2="14"></line><line x1="23" y1="11" x2="17" y2="11"></line></svg>
+                    </button>
+                    <button (click)="setView('about')" class="px-8 py-4 bg-white hover:bg-slate-50 border border-slate-200 text-slate-700 font-semibold rounded-2xl transition-all shadow-sm hover:shadow-md flex items-center gap-2">
+                        Saiba Mais
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                    </button>
+                </div>
+                <div class="flex items-center gap-12 pt-8 border-t border-slate-200">
+                    <div><h4 class="text-2xl font-bold text-slate-900">250K+</h4><p class="text-sm text-slate-500">Usuários Ativos</p></div>
+                    <div><h4 class="text-2xl font-bold text-slate-900">20K+</h4><p class="text-sm text-slate-500">Avaliações</p></div>
+                    <div><h4 class="text-2xl font-bold text-slate-900">18%</h4><p class="text-sm text-slate-500">Cashback Médio</p></div>
+                </div>
+            </div>
+
+            <div class="lg:w-1/2 mt-20 lg:mt-0 relative h-[500px] flex items-center justify-center perspective-1000">
+
+                <ng-container *ngIf="currentView === 'landing'">
+                    <div class="card-back absolute z-10 w-[340px] h-[220px] rounded-3xl shadow-2xl flex flex-col justify-between p-6 transform -translate-x-12 -translate-y-8 animate-float-delayed">
+                        <div class="absolute inset-0 bg-slate-900 rounded-3xl overflow-hidden">
+                            <div class="absolute inset-0 bg-gradient-to-br from-slate-800 to-slate-950"></div>
+                            <div class="absolute top-0 right-0 w-full h-full opacity-10" style="background-image: radial-gradient(#fff 1px, transparent 1px); background-size: 20px 20px;"></div>
+                        </div>
+                        <div class="relative z-10 flex justify-between items-start">
+                            <span class="text-slate-400 text-sm font-medium">COFRY</span>
+                            <div class="w-8 h-5 bg-white/10 rounded-sm backdrop-blur-sm"></div>
+                        </div>
+                        <div class="relative z-10 text-slate-500 font-mono text-lg tracking-widest mt-4">•••• •••• •••• 1234</div>
+                        <div class="relative z-10 flex justify-between items-end">
+                            <div><p class="text-[10px] text-slate-600 uppercase">Titular</p><p class="text-slate-400 text-sm">MARIA SILVA</p></div>
+                        </div>
+                    </div>
+
+                    <div class="card-front relative z-20 w-[340px] h-[220px] rounded-3xl shadow-[0_30px_60px_-12px_rgba(0,0,0,0.15)] flex flex-col justify-between p-6 overflow-hidden group hover:scale-105 transition-transform duration-500 animate-float">
+                        <div class="absolute inset-0 bg-white/60 backdrop-blur-xl border border-white/40"></div>
+                        <div class="absolute -right-10 -bottom-10 w-40 h-40 bg-emerald-400/20 rounded-full blur-3xl"></div>
+                        <div class="relative z-10 flex justify-between items-start">
+                            <span class="text-emerald-900 font-bold tracking-wider">COFRY</span>
+                            <img src="https://img.icons8.com/color/48/000000/mastercard-logo.png" alt="Mastercard" class="h-8 opacity-90" />
+                        </div>
+                        <div class="relative z-10 space-y-4">
+                            <div class="text-slate-800 font-mono text-xl tracking-widest drop-shadow-sm">1234 5678 9876 0123</div>
+                            <div class="flex justify-between items-end">
+                                <div><p class="text-[10px] text-slate-500 uppercase font-bold">Titular</p><p class="text-slate-800 text-sm font-semibold tracking-wide">MARIA SILVA</p></div>
+                            </div>
+                        </div>
+                    </div>
+                </ng-container>
+
+                <div *ngIf="currentView === 'login'" class="w-full max-w-md animate-fade-in-up relative z-20">
+                    <app-login></app-login>
+                </div>
+
+                <div *ngIf="currentView === 'signup'" class="w-full max-w-xl animate-fade-in-up relative z-20">
+                  <app-signup></app-signup>
+                </div>
+            </div>
+        </main>
+        
+                <!-- ================= VIEW: ABOUT (SOBRE) ================= -->
+                <main *ngIf="currentView === 'about'" class="max-w-7xl mx-auto px-6 pt-16 pb-20 space-y-12 animate-fade-in-up">
+                    <section class="grid grid-cols-1 md:grid-cols-2 gap-10 items-start">
+                        <!-- Texto e destaques -->
+                        <div class="space-y-6">
+                            <h2 class="text-4xl font-bold text-slate-900 tracking-tight">Sobre o Cofry</h2>
+                            <p class="text-slate-600 text-lg leading-relaxed">Somos um banco digital focado em simplificar sua vida financeira com segurança, transparência e vantagens reais no dia a dia.</p>
+                            <ul class="space-y-3 text-slate-700">
+                                <li class="flex items-center gap-3"><svg class="text-emerald-500" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"></path></svg> Conta digital gratuita com Pix ilimitado</li>
+                                <li class="flex items-center gap-3"><svg class="text-emerald-500" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"></path></svg> Cashback em compras e parceiros</li>
+                                <li class="flex items-center gap-3"><svg class="text-emerald-500" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"></path></svg> Investimentos integrados e extrato inteligente</li>
+                            </ul>
+                        </div>
+
+                        <!-- Cards com ícones relacionados -->
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                            <!-- Segurança -->
+                            <div class="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm flex items-start gap-4">
+                                <div class="w-12 h-12 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"/></svg>
+                                </div>
+                                <div>
+                                    <h3 class="text-lg font-bold text-slate-800">Segurança Bancária</h3>
+                                    <p class="text-slate-600">Criptografia e autenticação avançadas para proteger cada transação.</p>
+                                </div>
+                            </div>
+
+                            <!-- Transparência -->
+                            <div class="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm flex items-start gap-4">
+                                <div class="w-12 h-12 rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="6" x2="12" y2="12"/><line x1="12" y1="12" x2="16" y2="14"/></svg>
+                                </div>
+                                <div>
+                                    <h3 class="text-lg font-bold text-slate-800">Transparência</h3>
+                                    <p class="text-slate-600">Informações claras e extrato inteligente para total controle.</p>
+                                </div>
+                            </div>
+
+                            <!-- Rapidez -->
+                            <div class="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm flex items-start gap-4 sm:col-span-2">
+                                <div class="w-12 h-12 rounded-xl bg-amber-100 text-amber-600 flex items-center justify-center">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h3l3 8 4-16 3 8h4"/></svg>
+                                </div>
+                                <div>
+                                    <h3 class="text-lg font-bold text-slate-800">Rapidez</h3>
+                                    <p class="text-slate-600">Pix imediato e operações ágeis para o seu dia a dia.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </main>
+
+                <!-- ================= VIEW: SERVICES (SERVIÇOS) ================= -->
+                <main *ngIf="currentView === 'services'" class="max-w-7xl mx-auto px-6 pt-16 pb-20 space-y-12 animate-fade-in-up">
+                    <h2 class="text-4xl font-bold text-slate-900 tracking-tight">Serviços</h2>
+                    <section class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                        <!-- Pagamentos -->
+                        <div class="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm flex items-start gap-4">
+                            <div class="w-12 h-12 rounded-xl bg-indigo-100 text-indigo-600 flex items-center justify-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <rect x="2" y="5" width="20" height="14" rx="2" ry="2"></rect>
+                                    <line x1="2" y1="10" x2="22" y2="10"></line>
+                                </svg>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-slate-800">Pagamentos</h3>
+                                <p class="text-slate-600">Pague boletos, recarregue celular e gerencie DDA com rapidez.</p>
+                            </div>
+                        </div>
+
+                        <!-- Transferências -->
+                        <div class="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm flex items-start gap-4">
+                            <div class="w-12 h-12 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M7 7h10M7 7l4-4M17 7l-4-4"/>
+                                    <path d="M17 17H7M17 17l-4 4M7 17l4 4"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-slate-800">Transferências</h3>
+                                <p class="text-slate-600">Pix imediato, TED/DOC e agendamentos com confirmação instantânea.</p>
+                            </div>
+                        </div>
+
+                        <!-- Investimentos -->
+                        <div class="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm flex items-start gap-4">
+                            <div class="w-12 h-12 rounded-xl bg-amber-100 text-amber-600 flex items-center justify-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="3 17 9 11 13 15 21 7"></polyline>
+                                    <polyline points="3 3 3 7 7 7"></polyline>
+                                </svg>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-slate-800">Investimentos</h3>
+                                <p class="text-slate-600">Acompanhe sua carteira, rendimentos e oportunidades em um só lugar.</p>
+                            </div>
+                        </div>
+
+                        <!-- Cashback -->
+                        <div class="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm flex items-start gap-4">
+                            <div class="w-12 h-12 rounded-xl bg-pink-100 text-pink-600 flex items-center justify-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M20 13V6a2 2 0 0 0-2-2H9l-5 5v4a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2Z"></path>
+                                    <circle cx="9" cy="10" r="1"></circle>
+                                    <circle cx="13" cy="10" r="1"></circle>
+                                    <path d="M8 14l8-4"></path>
+                                </svg>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-slate-800">Cashback</h3>
+                                <p class="text-slate-600">Receba parte do valor de volta em compras e parceiros.</p>
+                            </div>
+                        </div>
+
+                        <!-- Programa para Estudantes -->
+                        <div class="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm flex items-start gap-4">
+                            <div class="w-12 h-12 rounded-xl bg-sky-100 text-sky-600 flex items-center justify-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M12 5l9 4-9 4-9-4 9-4"></path>
+                                    <path d="M4 12v4l8 4 8-4v-4"></path>
+                                </svg>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-slate-800">Cofry Estudantes</h3>
+                                <p class="text-slate-600">Benefícios acadêmicos, taxas reduzidas e apoio à educação financeira.</p>
+                            </div>
+                        </div>
+
+                        <!-- IA de Ajuda Financeira -->
+                        <div class="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm flex items-start gap-4">
+                            <div class="w-12 h-12 rounded-xl bg-violet-100 text-violet-600 flex items-center justify-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <rect x="6" y="7" width="12" height="10" rx="2" ry="2"></rect>
+                                    <circle cx="10" cy="12" r="1"></circle>
+                                    <circle cx="14" cy="12" r="1"></circle>
+                                    <path d="M12 17v2"></path>
+                                    <path d="M8 7V5m8 2V5"></path>
+                                </svg>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-slate-800">Cofry AI</h3>
+                                <p class="text-slate-600">Assistente inteligente para orçamentos, metas e recomendações personalizadas.</p>
+                            </div>
+                        </div>
+
+                        <!-- Automação de Pagamentos Recorrentes -->
+                        <div class="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm flex items-start gap-4">
+                            <div class="w-12 h-12 rounded-xl bg-teal-100 text-teal-600 flex items-center justify-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <rect x="3" y="4" width="18" height="16" rx="2" ry="2"></rect>
+                                    <line x1="16" y1="2" x2="16" y2="6"></line>
+                                    <line x1="8" y1="2" x2="8" y2="6"></line>
+                                    <line x1="3" y1="10" x2="21" y2="10"></line>
+                                </svg>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-slate-800">Pagamentos Recorrentes</h3>
+                                <p class="text-slate-600">Automatize boletos e assinaturas com lembretes e confirmações.</p>
+                            </div>
+                        </div>
+                    </section>
+                </main>
+
+                <!-- ================= VIEW: PRICES (PREÇOS) ================= -->
+                <main *ngIf="currentView === 'prices'" class="max-w-7xl mx-auto px-6 pt-16 pb-20 space-y-10 animate-fade-in-up">
+    <div class="text-center space-y-3">
+        <h2 class="text-4xl font-bold text-slate-900 tracking-tight">Planos e Preços</h2>
+        <p class="text-slate-600">Escolha o plano ideal para sua jornada financeira.</p>
+    </div>
+    <section class="grid grid-cols-1 md:grid-cols-3 gap-8 items-stretch">
+        <div class="group bg-white p-8 rounded-[2rem] border border-slate-200 shadow-sm h-full transition-all duration-200 cursor-pointer"
+             (mouseenter)="setHover('start')" (mouseleave)="setHover(null)" (click)="selectPlan('start')"
+             [class.ring-2]="hoverPlan === 'start' || selectedPlan === 'start'"
+             [class.ring-emerald-500]="hoverPlan === 'start' || selectedPlan === 'start'"
+             [class.-translate-y-1]="hoverPlan === 'start'"
+        >
+            <h3 class="text-xl font-bold text-slate-800 mb-2">Cofry Start</h3>
+            <p class="text-slate-400 text-sm mb-6">Para começar com o essencial.</p>
+            <div class="flex items-center gap-3 mb-6 justify-start">
+                <span *ngIf="selectedPlan === 'start'" class="inline-flex items-center px-3 py-1 rounded-full bg-emerald-100 text-emerald-700 text-xs font-semibold">Selecionado</span>
+                <span class="text-3xl font-bold text-slate-900">R$ 0</span> <span class="text-slate-400">/mês</span>
+            </div>
+            <ul class="space-y-2 text-sm text-slate-600">
+                <li class="flex items-center gap-2"><svg class="text-emerald-500" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"></path></svg> Conta digital gratuita</li>
+                <li class="flex items-center gap-2"><svg class="text-emerald-500" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"></path></svg> Pix ilimitado</li>
+                <li class="flex items-center gap-2"><svg class="text-emerald-500" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"></path></svg> Cartão virtual</li>
+                <li class="flex items-center gap-2 text-slate-500"><svg class="text-slate-400" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg> Sem cartão físico metal</li>
+            </ul>
+        </div>
+
+        <div class="group bg-white p-8 rounded-[2rem] border border-transparent shadow-lg h-full transition-all duration-200 cursor-pointer"
+            (mouseenter)="setHover('pro')" (mouseleave)="setHover(null)" (click)="selectPlan('pro')"
+            [class.ring-2]="hoverPlan === 'pro' || selectedPlan === 'pro'"
+            [class.ring-emerald-500]="hoverPlan === 'pro' || selectedPlan === 'pro'"
+            [class.border-2]="selectedPlan === 'pro'"
+            [class.border-emerald-500]="selectedPlan === 'pro'"
+            [class.-translate-y-1]="hoverPlan === 'pro'"
+        >
+            <h3 class="text-xl font-bold text-slate-800 mb-2">Cofry Pro</h3>
+            <p class="text-slate-400 text-sm mb-6">Para aproveitar benefícios e cashback.</p>
+            <div class="flex items-center gap-3 mb-6 justify-start">
+                <span *ngIf="selectedPlan === 'pro'" class="inline-flex items-center px-3 py-1 rounded-full bg-emerald-100 text-emerald-700 text-xs font-semibold">Selecionado</span>
+                <span class="text-3xl font-bold text-slate-900">R$ 7,77</span> <span class="text-slate-400">/mês</span>
+            </div>
+            <ul class="space-y-2 text-sm text-slate-600">
+                <li class="flex items-center gap-2"><svg class="text-emerald-500" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"></path></svg> Tudo do Start</li>
+                <li class="flex items-center gap-2"><svg class="text-emerald-500" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"></path></svg> Cartão físico Platinum</li>
+                <li class="flex items-center gap-2"><svg class="text-emerald-500" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"></path></svg> 1% de cashback em tudo</li>
+                <li class="flex items-center gap-2"><svg class="text-emerald-500" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"></path></svg> 4 saques grátis por mês</li>
+                <li class="flex items-center gap-2"><svg class="text-emerald-500" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"></path></svg> Tag de pedágio grátis</li>
+            </ul>
+        </div>
+
+        <div class="group bg-slate-900 p-8 rounded-[2rem] border border-slate-800 text-white h-full transition-all duration-200 cursor-pointer"
+            (mouseenter)="setHover('black')" (mouseleave)="setHover(null)" (click)="selectPlan('black')"
+            [class.ring-2]="hoverPlan === 'black' || selectedPlan === 'black'"
+            [class.ring-emerald-400]="hoverPlan === 'black' || selectedPlan === 'black'"
+            [class.-translate-y-1]="hoverPlan === 'black'"
+        >
+            <h3 class="text-xl font-bold mb-2">Cofry Black</h3>
+            <p class="text-slate-400 text-sm mb-6">Exclusividade máxima e benefícios premium.</p>
+            <div class="flex items-center gap-3 mb-6 justify-start">
+                <span *ngIf="selectedPlan === 'black'" class="inline-flex items-center px-3 py-1 rounded-full bg-emerald-900/30 text-emerald-300 text-xs font-semibold">Selecionado</span>
+                <span class="text-3xl font-bold">R$ 49,90</span> <span class="text-slate-400">/mês</span>
+            </div>
+            <ul class="space-y-2 text-sm text-slate-200">
+                <li class="flex items-center gap-2"><svg class="text-emerald-400" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"></path></svg> Tudo do Pro</li>
+                <li class="flex items-center gap-2"><svg class="text-emerald-400" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"></path></svg> Cartão Black em metal</li>
+                <li class="flex items-center gap-2"><svg class="text-emerald-400" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"></path></svg> 2.5% de cashback</li>
+                <li class="flex items-center gap-2"><svg class="text-emerald-400" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"></path></svg> Acesso ilimitado a salas VIP</li>
+                <li class="flex items-center gap-2"><svg class="text-emerald-400" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"></path></svg> Assessoria de investimentos</li>
+                
+            </ul>
+        </div>
+    </section>
+</main>
+
+                </div>
+</div>

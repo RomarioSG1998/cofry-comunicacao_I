@@ -1,0 +1,64 @@
+<div class="flex items-center justify-between p-4 hover:bg-gray-50 transition rounded-xl">
+
+  <!-- Ícone -->
+  <div
+    class="w-10 h-10 rounded-full flex items-center justify-center"
+    [ngClass]="getIconConfig().bg + ' ' + getIconConfig().color"
+  >
+
+    <!-- PIX recebido -->
+    <svg *ngIf="getIconConfig().icon === 'pix-in'" class="w-5 h-5" fill="none"
+      viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+        d="M5 12l5 5L20 7" />
+    </svg>
+
+    <!-- PIX enviado -->
+    <svg *ngIf="getIconConfig().icon === 'pix-out'" class="w-5 h-5" fill="none"
+      viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+        d="M19 12l-5-5-10 10" />
+    </svg>
+
+    <!-- Mercado -->
+    <svg *ngIf="getIconConfig().icon === 'market'" class="w-5 h-5" fill="none"
+      viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+        d="M3 7h18M5 7v10a2 2 0 002 2h10a2 2 0 002-2V7" />
+    </svg>
+
+    <!-- Streaming -->
+    <svg *ngIf="getIconConfig().icon === 'streaming'" class="w-5 h-5" fill="none"
+      viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+        d="M14.752 11.168l-5.197-3.03A1 1 0 008 9.03v5.94a1 1 0 001.555.832l5.197-3.03a1 1 0 000-1.664z" />
+    </svg>
+
+    <!-- Transporte -->
+    <svg *ngIf="getIconConfig().icon === 'transport'" class="w-5 h-5" fill="none"
+      viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+        d="M3 13l2-5h14l2 5M5 16h.01M19 16h.01" />
+    </svg>
+
+  </div>
+
+  <!-- Info -->
+  <div class="flex-1 ml-4">
+    <p class="text-sm font-semibold text-gray-900">
+      {{ transaction.descricao }}
+    </p>
+    <p class="text-xs text-gray-500">
+      {{ transaction.data_hora | date:'dd/MM, HH:mm' }} • {{ transaction.forma_pagamento }}
+    </p>
+  </div>
+
+  <!-- Valor -->
+  <div
+    class="text-sm font-semibold"
+    [ngClass]="transaction.valor > 0 ? 'text-green-600' : 'text-gray-900'"
+  >
+    {{ transaction.valor| currency:'BRL' }}
+  </div>
+
+</div>

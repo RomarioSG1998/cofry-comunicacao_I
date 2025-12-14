@@ -1,0 +1,30 @@
+<div class="feedback-container">
+  <div 
+    *ngFor="let msg of messages" 
+    class="feedback-message"
+    [class.success]="msg.type === 'success'"
+    [class.error]="msg.type === 'error'"
+    [class.info]="msg.type === 'info'"
+  >
+    <div class="feedback-content">
+      <div class="feedback-icon" [innerHTML]="getIcon(msg.type)"></div>
+      <div class="feedback-text">
+        <div *ngIf="msg.title" class="feedback-title">{{ msg.title }}</div>
+        <div class="feedback-message-text">{{ msg.message }}</div>
+      </div>
+      <button 
+        (click)="removeMessage(msg.id)"
+        class="feedback-close"
+        aria-label="Fechar"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+  </div>
+</div>
+
+
+

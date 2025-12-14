@@ -1,0 +1,39 @@
+name: Push-to-EC2
+
+on:
+  push:
+    branches:
+      - main
+ #hello romario tudo baoa \\ tudo
+jobs:
+  build:
+    name: Deploy to EC2
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout the files
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+      - name: Build
+        run: mvn clean install -DskipTests
+      - name: login no docker
+        run: docker login -u ${{secrets.DOCKER_USERNAME}} -p ${{secrets.DOCKER_PASSWORD}}
+      - name: build image docker
+        run: docker build -t patrickgu/cofry-back .
+      - name: image push
+        run: docker push patrickgu/cofry-back
+
+  Deploy:
+    needs: build
+    runs-on: self-hosted
+    steps:
+      - name: Pull image From Docker hub
+        run: docker pull patrickgu/cofry-back:latest
+#      - name: remove docker
+#        run: docker rm -f patrickgu/cofry-back
+      - name: Run docker
+        run: docker run -d -p 8080:8080 --name cofry-back patrickgu/cofry-back

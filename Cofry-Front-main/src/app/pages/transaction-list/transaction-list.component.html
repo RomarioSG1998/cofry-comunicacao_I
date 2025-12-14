@@ -1,0 +1,29 @@
+<section class="min-h-screen bg-gray-50 p-6">
+  <!-- Título -->
+  <header class="mb-6">
+    <h1 class="text-2xl font-bold text-gray-800">
+      Extrato
+    </h1>
+    <p class="text-sm text-gray-500">
+      Histórico de movimentações
+    </p>
+  </header>
+
+  <!-- Lista de Transações -->
+  <div class="flex flex-col gap-4">
+    <app-transaction-card
+      *ngFor="let transaction of transactions"
+      [transaction]="transaction"
+    >
+    </app-transaction-card>
+  </div>
+
+  <!-- Estado vazio -->
+  <div
+    *ngIf="transactions.length === 0"
+    class="flex flex-col items-center justify-center mt-20 text-gray-400"
+  >
+    <i class="ri-inbox-line text-5xl mb-4"></i>
+    <span>Nenhuma transação encontrada</span>
+  </div>
+</section>

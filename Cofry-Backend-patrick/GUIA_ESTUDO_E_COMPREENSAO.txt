@@ -1,0 +1,121 @@
+================================================================================
+1. CONEXÃO COM O BANCO DE DADOS NA NUVEM (pgAdmin)
+================================================================================
+
+OBJETIVO: Conectar ao banco de dados PostgreSQL hospedado na AWS RDS usando pgAdmin.
+
+PASSO A PASSO:
+
+1. Abrir o pgAdmin
+
+2. Criar nova conexão:
+   - Clique com o botão direito em "Servers"
+   - Selecione "Create" → "Server..."
+
+3. Configurar aba "General":
+   - Name: Cofry Database (ou qualquer nome de sua preferência)
+
+4. Configurar aba "Connection":
+   - Host name/address: cofry-db.cc5w4muoa5ca.us-east-1.rds.amazonaws.com
+   - Port: 5432
+   - Maintenance database: postgres
+   - Username: postgres
+   - Password: jala.0725
+   - Marque "Save password" se quiser salvar a senha
+
+5. Finalizar:
+   - Clique em "Save"
+
+CREDENCIAIS DO BANCO:
+   Host: cofry-db.cc5w4muoa5ca.us-east-1.rds.amazonaws.com
+   Porta: 5432
+   Database: postgres (ou o nome do banco específico)
+   Usuário: postgres
+   Senha: jala.0725
+
+================================================================================
+RESUMO DIDÁTICO DOS READMEs - ESTRUTURA DO PROJETO
+================================================================================
+
+1. CONTROLLER
+   - Função: Define as rotas/navegações HTTP (GET, POST, PUT, DELETE)
+   - O que faz: Recebe requisições e define os endpoints da API
+
+2. SERVICE
+   - Função: Onde acontece a lógica de negócio e operações no banco
+   - O que faz: Implementa CRUD e conecta com outras partes do código
+   - Importante: É aqui que a "mágica" acontece, relacionando tudo de forma fluida
+
+3. MODEL
+   - Função: Criar entidades (tabelas do banco) como classes Java
+   - O que faz: Cada tabela do banco vira uma classe (ex: User.java)
+   - Importante: Mapeia tabelas do banco para objetos Java
+
+4. PERSISTENCE
+   - Função: Criar a conexão com o banco de dados
+   - O que faz: Configura a conexão (pode ser trabalhoso, mas é rápido seguindo a documentação)
+
+5. REPOSITORY
+   - Função: Usar recursos do JPA para acessar dados
+   - Estrutura esperada:
+     @Repository
+     public interface EntradaRepository extends JpaRepository<Entradas, Long>{
+     }
+   - Importante: Manter imports e anotações corretas
+
+6. VIEW
+   - Função: Formatar como os dados serão exibidos para o usuário
+   - Status: Por enquanto deixar quieto (não implementar ainda)
+
+7. CONFIG
+   - Função: Conectar com o front-end em Angular
+   - Observação: Mais complicado, mas ainda fácil
+
+8. DTOs
+   - Função: Formatar como os dados serão exibidos para o usuário
+   - O que faz: Define o formato de entrada/saída dos dados
+
+================================================================================
+FLUXO RESUMIDO DA ARQUITETURA
+================================================================================
+
+Controller (rotas HTTP) 
+    ↓
+Service (lógica/CRUD)
+    ↓
+Repository (JPA - acesso dados)
+    ↓
+Model (entidades = tabelas do banco)
+    ↓
+Persistence (conexão com banco)
+
+Resumo: Controller recebe requisições → Service processa → Repository acessa dados 
+→ Model representa tabelas → Persistence conecta ao banco.
+
+================================================================================
+3. ESQUEMA SQL - DDL (Data Definition Language)
+================================================================================
+
+OBJETIVO: Documentar a estrutura do banco de dados com comandos DDL.
+
+NOTA: O esquema completo está no arquivo separado: esquema_banco.sql
+
+O arquivo esquema_banco.sql contém:
+- CREATE TABLE completo da tabela usuario
+- Índices recomendados
+- Exemplos de INSERT, SELECT, UPDATE, DELETE
+- Comentários e observações importantes
+
+Para executar o script SQL:
+1. Abra o pgAdmin
+2. Conecte ao banco de dados
+3. Execute o arquivo esquema_banco.sql ou copie e cole os comandos
+
+ESTRUTURA RESUMIDA DA TABELA usuario:
+- id (BIGSERIAL, PRIMARY KEY)
+- first_name (VARCHAR(100), NOT NULL)
+- second_name (VARCHAR(100))
+- email (VARCHAR(255), UNIQUE, NOT NULL)
+- password (VARCHAR(255), NOT NULL)
+- created_at (TIMESTAMP, DEFAULT CURRENT_TIMESTAMP)
+- updated_at (TIMESTAMP, DEFAULT CURRENT_TIMESTAMP)

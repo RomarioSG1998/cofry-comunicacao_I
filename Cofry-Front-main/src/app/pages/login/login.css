@@ -1,0 +1,29 @@
+/* A maioria dos estilos visuais (Glassmorphism, cores, sombras) 
+  está definida diretamente no HTML usando classes do Tailwind.
+  
+  Aqui definimos apenas as animações personalizadas.
+*/
+
+/* Animação suave de entrada (Fade In Up) */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Classe utilitária para aplicar a animação */
+.animate-fade-in-up {
+  /* Duração: 0.8s
+     Curva: cubic-bezier (para um movimento mais natural e elegante)
+     Forwards: Mantém o estado final (visível) após a animação
+  */
+  animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  
+  /* Começa invisível para não piscar na tela antes da animação iniciar */
+  opacity: 0; 
+}

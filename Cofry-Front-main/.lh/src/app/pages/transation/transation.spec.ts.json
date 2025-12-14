@@ -1,0 +1,22 @@
+{
+    "sourceFile": "src/app/pages/transation/transation.spec.ts",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 1,
+            "patches": [
+                {
+                    "date": 1765611259647,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1765611266305,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,7 +1,7 @@\n import { ComponentFixture, TestBed } from '@angular/core/testing';\r\n \r\n-import { trans } from './transation';\r\n+import { transi } from './transation';\r\n \r\n describe('Transation', () => {\r\n   let component: Transation;\r\n   let fixture: ComponentFixture<Transation>;\r\n"
+                }
+            ],
+            "date": 1765611259647,
+            "name": "Commit-0",
+            "content": "import { ComponentFixture, TestBed } from '@angular/core/testing';\r\n\r\nimport { T } from './transation';\r\n\r\ndescribe('Transation', () => {\r\n  let component: Transation;\r\n  let fixture: ComponentFixture<Transation>;\r\n\r\n  beforeEach(async () => {\r\n    await TestBed.configureTestingModule({\r\n      imports: [Transation]\r\n    })\r\n    .compileComponents();\r\n\r\n    fixture = TestBed.createComponent(Transation);\r\n    component = fixture.componentInstance;\r\n    await fixture.whenStable();\r\n  });\r\n\r\n  it('should create', () => {\r\n    expect(component).toBeTruthy();\r\n  });\r\n});\r\n"
+        }
+    ]
+}

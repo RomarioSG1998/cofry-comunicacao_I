@@ -1,0 +1,42 @@
+{
+    "sourceFile": "src/app/pages/transation/transation.html",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 6,
+            "patches": [
+                {
+                    "date": 1765610848593,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1765610853792,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -14,9 +14,9 @@\n   </div>\r\n \r\n   <div \r\n     [ngClass]=\"{ \r\n-      'text-red-600': transaction.amount < 0, \r\n+      'text-red-600': transation.amount < 0, \r\n       'text-green-600': transaction.amount > 0 \r\n     }\" \r\n     class=\"font-bold\"\r\n   >\r\n"
+                },
+                {
+                    "date": 1765610861263,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -15,9 +15,9 @@\n \r\n   <div \r\n     [ngClass]=\"{ \r\n       'text-red-600': transation.amount < 0, \r\n-      'text-green-600': transaction.amount > 0 \r\n+      'text-green-600': transation.amount > 0 \r\n     }\" \r\n     class=\"font-bold\"\r\n   >\r\n     {{ transaction.amount | currency: 'BRL' }}\r\n"
+                },
+                {
+                    "date": 1765610871898,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,8 +1,8 @@\n <div class=\"flex justify-between items-center p-4 border-b border-gray-100 hover:bg-gray-50 transition-colors\">\r\n   <div class=\"flex items-center space-x-4\">\r\n     <div class=\"w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600\">\r\n-      <span *ngIf=\"transaction.amount < 0\">🛒</span> \r\n+      <span *ngIf=\"transation.amount < 0\">🛒</span> \r\n       <span *ngIf=\"transaction.amount > 0\">💸</span>\r\n     </div>\r\n     \r\n     <div>\r\n"
+                },
+                {
+                    "date": 1765610886876,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,13 +1,13 @@\n <div class=\"flex justify-between items-center p-4 border-b border-gray-100 hover:bg-gray-50 transition-colors\">\r\n   <div class=\"flex items-center space-x-4\">\r\n     <div class=\"w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600\">\r\n       <span *ngIf=\"transation.amount < 0\">🛒</span> \r\n-      <span *ngIf=\"transaction.amount > 0\">💸</span>\r\n+      <span *ngIf=\"transation.amount > 0\">💸</span>\r\n     </div>\r\n     \r\n     <div>\r\n-      <p class=\"font-semibold text-gray-800\">{{ transaction.description }}</p>\r\n+      <p class=\"font-semibold text-gray-800\">{{ transation.description }}</p>\r\n       <p class=\"text-xs text-gray-500\">\r\n         {{ transaction.transactionDate | date:'shortDate' }} • {{ transaction.transactionType }}\r\n       </p>\r\n     </div>\r\n"
+                },
+                {
+                    "date": 1765610896423,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -7,9 +7,9 @@\n     \r\n     <div>\r\n       <p class=\"font-semibold text-gray-800\">{{ transation.description }}</p>\r\n       <p class=\"text-xs text-gray-500\">\r\n-        {{ transaction.transactionDate | date:'shortDate' }} • {{ transaction.transactionType }}\r\n+        {{ transation.transactionDate | date:'shortDate' }} • {{ transation.transactionType }}\r\n       </p>\r\n     </div>\r\n   </div>\r\n \r\n"
+                },
+                {
+                    "date": 1765610901653,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,15 +1,15 @@\n <div class=\"flex justify-between items-center p-4 border-b border-gray-100 hover:bg-gray-50 transition-colors\">\r\n   <div class=\"flex items-center space-x-4\">\r\n     <div class=\"w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600\">\r\n       <span *ngIf=\"transation.amount < 0\">🛒</span> \r\n-      <span *ngIf=\"transation.amount > 0\">💸</span>\r\n+      <span *ngIf=\"transaction.amount > 0\">💸</span>\r\n     </div>\r\n     \r\n     <div>\r\n-      <p class=\"font-semibold text-gray-800\">{{ transation.description }}</p>\r\n+      <p class=\"font-semibold text-gray-800\">{{ transaction.description }}</p>\r\n       <p class=\"text-xs text-gray-500\">\r\n-        {{ transation.transationDate | date:'shortDate' }} • {{ transation.transactionType }}\r\n+        {{ transaction.transactionDate | date:'shortDate' }} • {{ transaction.transactionType }}\r\n       </p>\r\n     </div>\r\n   </div>\r\n \r\n"
+                }
+            ],
+            "date": 1765610848593,
+            "name": "Commit-0",
+            "content": "<div class=\"flex justify-between items-center p-4 border-b border-gray-100 hover:bg-gray-50 transition-colors\">\r\n  <div class=\"flex items-center space-x-4\">\r\n    <div class=\"w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600\">\r\n      <span *ngIf=\"transaction.amount < 0\">🛒</span> \r\n      <span *ngIf=\"transaction.amount > 0\">💸</span>\r\n    </div>\r\n    \r\n    <div>\r\n      <p class=\"font-semibold text-gray-800\">{{ transaction.description }}</p>\r\n      <p class=\"text-xs text-gray-500\">\r\n        {{ transaction.transactionDate | date:'shortDate' }} • {{ transaction.transactionType }}\r\n      </p>\r\n    </div>\r\n  </div>\r\n\r\n  <div \r\n    [ngClass]=\"{ \r\n      'text-red-600': transaction.amount < 0, \r\n      'text-green-600': transaction.amount > 0 \r\n    }\" \r\n    class=\"font-bold\"\r\n  >\r\n    {{ transaction.amount | currency: 'BRL' }}\r\n  </div>\r\n</div>"
+        }
+    ]
+}

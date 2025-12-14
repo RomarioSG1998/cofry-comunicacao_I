@@ -1,0 +1,37 @@
+# Backend (Java/Maven)
+Cofry-Backend-patrick/target/
+Cofry-Backend-patrick/.idea/
+Cofry-Backend-patrick/*.iml
+Cofry-Backend-patrick/*.ipr
+Cofry-Backend-patrick/*.iws
+
+# Frontend (Angular/Node)
+Cofry-Front-main/node_modules/
+Cofry-Front-main/dist/
+Cofry-Front-main/.angular/
+Cofry-Front-main/.vscode/
+Cofry-Front-main/coverage/
+Cofry-Front-main/*.log
+
+# System files
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+
+# IDE
+.vscode/
+.idea/
+*.iml
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Environment variables
+.env
+.env.local
+.env.*.local

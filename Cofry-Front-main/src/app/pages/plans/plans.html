@@ -1,0 +1,151 @@
+<div class="min-h-screen bg-slate-50 text-slate-900 font-sans selection:bg-emerald-500 selection:text-white pb-20">
+  
+  <!-- Navbar removed: use shared `app-navbar` component when provided -->
+  <!-- <app-navbar> will be inserted here once the shared navbar is ready -->
+
+  <main class="max-w-7xl mx-auto px-6 pt-12 space-y-12 animate-fade-in-up">
+    
+    <!-- Header da Seção -->
+    <div class="text-center max-w-2xl mx-auto space-y-4">
+      <h1 class="text-4xl font-bold text-slate-900 tracking-tight">Escolha o plano ideal para sua <br/><span class="text-transparent bg-clip-text bg-gradient-to-r from-emerald-600 to-teal-500">liberdade financeira</span></h1>
+      <p class="text-slate-500 text-lg">Desbloqueie recursos exclusivos, cartões premium e maiores rendimentos com nossos planos feitos sob medida.</p>
+      
+      <!-- Toggle Mensal/Anual (Visual) -->
+      <div class="flex items-center justify-center mt-6">
+        <div class="bg-slate-100 p-1 rounded-xl inline-flex relative">
+          <div class="w-1/2 h-full absolute left-0 bg-white rounded-lg shadow-sm transition-all"></div>
+          <button class="relative z-10 px-6 py-2 text-sm font-bold text-slate-800 rounded-lg">Mensal</button>
+          <button class="relative z-10 px-6 py-2 text-sm font-medium text-slate-500 hover:text-slate-700 rounded-lg">Anual <span class="text-[10px] text-emerald-600 bg-emerald-100 px-1.5 py-0.5 rounded ml-1">-20%</span></button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Cards de Preços -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 items-start">
+      
+      <!-- Plano Start -->
+      <div class="bg-white p-8 rounded-[2rem] border border-slate-200 shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all duration-300">
+        <h3 class="text-xl font-bold text-slate-800 mb-2">Cofry Start</h3>
+        <p class="text-slate-400 text-sm mb-6">Para quem está começando a organizar as finanças.</p>
+        <div class="mb-6">
+          <span class="text-4xl font-bold text-slate-900">R$ 0</span>
+          <span class="text-slate-400">/mês</span>
+        </div>
+        <button class="w-full py-3 px-4 border border-slate-200 text-slate-700 font-bold rounded-xl hover:bg-slate-50 transition-colors mb-8">Plano Atual</button>
+        
+        <ul class="space-y-4 text-sm text-slate-600">
+          <li class="flex items-center gap-3">
+            <svg class="text-emerald-500 w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+            Conta digital gratuita
+          </li>
+          <li class="flex items-center gap-3">
+            <svg class="text-emerald-500 w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+            Pix ilimitado
+          </li>
+          <li class="flex items-center gap-3">
+            <svg class="text-emerald-500 w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+            Cartão virtual
+          </li>
+          <li class="flex items-center gap-3 text-slate-400">
+            <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            Sem cartão físico metal
+          </li>
+        </ul>
+      </div>
+
+      <!-- Plano Pro (Destaque) -->
+      <div class="bg-white p-8 rounded-[2rem] border-2 border-emerald-500 shadow-2xl shadow-emerald-500/10 relative transform md:-translate-y-4 hover:-translate-y-6 transition-all duration-300">
+        <div class="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-emerald-500 text-white px-4 py-1 rounded-full text-xs font-bold tracking-wide uppercase shadow-lg">Mais Popular</div>
+        
+        <h3 class="text-xl font-bold text-slate-800 mb-2">Cofry Pro</h3>
+        <p class="text-slate-400 text-sm mb-6">Para quem quer investir e ganhar cashback.</p>
+        <div class="mb-6">
+          <span class="text-4xl font-bold text-slate-900">R$ 19,90</span>
+          <span class="text-slate-400">/mês</span>
+        </div>
+        <button class="w-full py-3 px-4 bg-emerald-600 text-white font-bold rounded-xl hover:bg-emerald-700 shadow-lg shadow-emerald-500/30 transition-all mb-8">Assinar Pro</button>
+        
+        <ul class="space-y-4 text-sm text-slate-600">
+          <li class="flex items-center gap-3">
+            <div class="bg-emerald-100 p-1 rounded-full"><svg class="text-emerald-600 w-3 h-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg></div>
+            <span class="font-bold text-emerald-900">Tudo do Start</span>
+          </li>
+          <li class="flex items-center gap-3">
+            <svg class="text-emerald-500 w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+            Cartão físico Platinum
+          </li>
+          <li class="flex items-center gap-3">
+            <svg class="text-emerald-500 w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+            1% de Cashback em tudo
+          </li>
+          <li class="flex items-center gap-3">
+            <svg class="text-emerald-500 w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+            4 Saques grátis/mês
+          </li>
+          <li class="flex items-center gap-3">
+            <svg class="text-emerald-500 w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+            Tag de pedágio grátis
+          </li>
+        </ul>
+      </div>
+
+      <!-- Plano Black -->
+      <div class="bg-slate-900 p-8 rounded-[2rem] border border-slate-800 shadow-xl relative overflow-hidden group hover:-translate-y-2 transition-all duration-300">
+        <!-- Efeito de fundo -->
+        <div class="absolute top-0 right-0 w-64 h-64 bg-emerald-500/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 pointer-events-none"></div>
+        
+        <h3 class="text-xl font-bold text-white mb-2">Cofry Black</h3>
+        <p class="text-slate-400 text-sm mb-6">Exclusividade, salas VIP e assessoria.</p>
+        <div class="mb-6 relative z-10">
+          <span class="text-4xl font-bold text-white">R$ 49,90</span>
+          <span class="text-slate-500">/mês</span>
+        </div>
+        <button class="w-full py-3 px-4 bg-white/10 text-white border border-white/10 font-bold rounded-xl hover:bg-white hover:text-slate-900 transition-all mb-8 relative z-10 backdrop-blur-sm">Ser Black</button>
+        
+        <ul class="space-y-4 text-sm text-slate-300 relative z-10">
+          <li class="flex items-center gap-3">
+            <div class="bg-white/20 p-1 rounded-full"><svg class="text-white w-3 h-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg></div>
+            <span class="font-bold text-white">Tudo do Pro</span>
+          </li>
+          <li class="flex items-center gap-3">
+            <svg class="text-emerald-400 w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+            Cartão Black em Metal
+          </li>
+          <li class="flex items-center gap-3">
+            <svg class="text-emerald-400 w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+            2.5% de Cashback
+          </li>
+          <li class="flex items-center gap-3">
+            <svg class="text-emerald-400 w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+            Acesso ilimitado a Salas VIP
+          </li>
+          <li class="flex items-center gap-3">
+            <svg class="text-emerald-400 w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+            Assessoria de Investimentos
+          </li>
+        </ul>
+      </div>
+
+    </div>
+
+    <!-- FAQ Rápido -->
+    <section class="max-w-3xl mx-auto pt-8">
+       <h3 class="text-2xl font-bold text-slate-800 text-center mb-8">Dúvidas Frequentes</h3>
+       <div class="space-y-4">
+          <div class="bg-white rounded-2xl p-5 border border-slate-100 shadow-sm cursor-pointer hover:bg-slate-50 transition-colors">
+             <div class="flex justify-between items-center">
+                <h4 class="font-bold text-slate-700">Posso cancelar a qualquer momento?</h4>
+                <svg class="text-slate-400" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+             </div>
+          </div>
+          <div class="bg-white rounded-2xl p-5 border border-slate-100 shadow-sm cursor-pointer hover:bg-slate-50 transition-colors">
+             <div class="flex justify-between items-center">
+                <h4 class="font-bold text-slate-700">Como funciona o Cashback?</h4>
+                <svg class="text-slate-400" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+             </div>
+          </div>
+       </div>
+    </section>
+
+  </main>
+</div>

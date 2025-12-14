@@ -1,0 +1,22 @@
+{
+    "sourceFile": "src/app/pages/login/login.css",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 1,
+            "patches": [
+                {
+                    "date": 1765595638869,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1765596041223,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,15 +1,29 @@\n-  @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }\r\n-    @keyframes floatDelayed { 0%, 100% { transform: translate(-3rem, -2rem) rotate(-15deg); } 50% { transform: translate(-3rem, -2.5rem) rotate(-10deg); } }\r\n-    @keyframes float { 0%, 100% { transform: translateY(0) rotate(0deg); } 50% { transform: translateY(-15px) rotate(2deg); } }\r\n-    \r\n-    .animate-fade-in-up { animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards; }\r\n-    .animate-float { animation: float 6s ease-in-out infinite; }\r\n-    .animate-float-delayed { animation: floatDelayed 7s ease-in-out infinite; }\r\n-    \r\n-    .perspective-1000 { perspective: 1000px; }\r\n-    ::-webkit-scrollbar { width: 6px; }\r\n-    ::-webkit-scrollbar-track { background: transparent; }\r\n-    ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }\r\n-    \r\n-    .scrollbar-hide::-webkit-scrollbar { display: none; }\r\n-    .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }\n\\ No newline at end of file\n+/* A maioria dos estilos visuais (Glassmorphism, cores, sombras) \r\n+  está definida diretamente no HTML usando classes do Tailwind.\r\n+  \r\n+  Aqui definimos apenas as animações personalizadas.\r\n+*/\r\n+\r\n+/* Animação suave de entrada (Fade In Up) */\r\n+@keyframes fadeInUp {\r\n+  from {\r\n+    opacity: 0;\r\n+    transform: translateY(20px);\r\n+  }\r\n+  to {\r\n+    opacity: 1;\r\n+    transform: translateY(0);\r\n+  }\r\n+}\r\n+\r\n+/* Classe utilitária para aplicar a animação */\r\n+.animate-fade-in-up {\r\n+  /* Duração: 0.8s\r\n+     Curva: cubic-bezier (para um movimento mais natural e elegante)\r\n+     Forwards: Mantém o estado final (visível) após a animação\r\n+  */\r\n+  animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;\r\n+  \r\n+  /* Começa invisível para não piscar na tela antes da animação iniciar */\r\n+  opacity: 0; \r\n+}\n\\ No newline at end of file\n"
+                }
+            ],
+            "date": 1765595638869,
+            "name": "Commit-0",
+            "content": "  @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }\r\n    @keyframes floatDelayed { 0%, 100% { transform: translate(-3rem, -2rem) rotate(-15deg); } 50% { transform: translate(-3rem, -2.5rem) rotate(-10deg); } }\r\n    @keyframes float { 0%, 100% { transform: translateY(0) rotate(0deg); } 50% { transform: translateY(-15px) rotate(2deg); } }\r\n    \r\n    .animate-fade-in-up { animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards; }\r\n    .animate-float { animation: float 6s ease-in-out infinite; }\r\n    .animate-float-delayed { animation: floatDelayed 7s ease-in-out infinite; }\r\n    \r\n    .perspective-1000 { perspective: 1000px; }\r\n    ::-webkit-scrollbar { width: 6px; }\r\n    ::-webkit-scrollbar-track { background: transparent; }\r\n    ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }\r\n    \r\n    .scrollbar-hide::-webkit-scrollbar { display: none; }\r\n    .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }"
+        }
+    ]
+}

@@ -1,0 +1,46 @@
+{
+    "sourceFile": "src/app/app.routes.ts",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 7,
+            "patches": [
+                {
+                    "date": 1765603074082,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1765611486097,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -17,10 +17,11 @@\n     { path: '', component: Home },      // Rota de abertura\r\n     { path: 'login', component: Login },\r\n     { path: 'Login', component: Login }, // Mantido para compatibilidade\r\n     { path: 'cadastrar', component: SignUp },\r\n-    { path: 'Cadastrar', component: SignUp }, // Mantido para compatibilidade\r\n+    { path: 'Cadastrar', component: SignUp }, // Mantido para compatibilidade3\r\n     \r\n+    \r\n     // Rota de Layout Principal (Com Navbar)\r\n     {\r\n       \r\n         path: 'nav', \r\n"
+                },
+                {
+                    "date": 1765611493245,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -18,10 +18,10 @@\n     { path: 'login', component: Login },\r\n     { path: 'Login', component: Login }, // Mantido para compatibilidade\r\n     { path: 'cadastrar', component: SignUp },\r\n     { path: 'Cadastrar', component: SignUp }, // Mantido para compatibilidade3\r\n+    {path}\r\n     \r\n-    \r\n     // Rota de Layout Principal (Com Navbar)\r\n     {\r\n       \r\n         path: 'nav', \r\n"
+                },
+                {
+                    "date": 1765611499155,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -18,9 +18,9 @@\n     { path: 'login', component: Login },\r\n     { path: 'Login', component: Login }, // Mantido para compatibilidade\r\n     { path: 'cadastrar', component: SignUp },\r\n     { path: 'Cadastrar', component: SignUp }, // Mantido para compatibilidade3\r\n-    {path}\r\n+    {path: tran}\r\n     \r\n     // Rota de Layout Principal (Com Navbar)\r\n     {\r\n       \r\n"
+                },
+                {
+                    "date": 1765611509344,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -18,9 +18,9 @@\n     { path: 'login', component: Login },\r\n     { path: 'Login', component: Login }, // Mantido para compatibilidade\r\n     { path: 'cadastrar', component: SignUp },\r\n     { path: 'Cadastrar', component: SignUp }, // Mantido para compatibilidade3\r\n-    {path: tran}\r\n+    {path: 'transation', component: Tra},\r\n     \r\n     // Rota de Layout Principal (Com Navbar)\r\n     {\r\n       \r\n"
+                },
+                {
+                    "date": 1765611516346,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -11,16 +11,17 @@\n import { Pagar } from './pages/pagar/pagar';\r\n import { Transferir } from './pages/transferir/transferir';\r\n import { Extrato } from './pages/extrato/extrato';\r\n import { MainLayout } from './shared/layout/main-layout';\r\n+import { Transation } from './pages/transation/transation';\r\n \r\n export const routes: Routes = [\r\n     { path: '', component: Home },      // Rota de abertura\r\n     { path: 'login', component: Login },\r\n     { path: 'Login', component: Login }, // Mantido para compatibilidade\r\n     { path: 'cadastrar', component: SignUp },\r\n     { path: 'Cadastrar', component: SignUp }, // Mantido para compatibilidade3\r\n-    {path: 'transation', component: Tra},\r\n+    {path: 'transation', component: Transation},\r\n     \r\n     // Rota de Layout Principal (Com Navbar)\r\n     {\r\n       \r\n"
+                },
+                {
+                    "date": 1765611521509,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -19,9 +19,9 @@\n     { path: 'login', component: Login },\r\n     { path: 'Login', component: Login }, // Mantido para compatibilidade\r\n     { path: 'cadastrar', component: SignUp },\r\n     { path: 'Cadastrar', component: SignUp }, // Mantido para compatibilidade3\r\n-    {   path: 'transation', component: Transation},\r\n+    {  path: 'transation', component: Transation},\r\n     \r\n     // Rota de Layout Principal (Com Navbar)\r\n     {\r\n       \r\n"
+                },
+                {
+                    "date": 1765678672384,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -19,9 +19,9 @@\n     { path: 'login', component: Login },\r\n     { path: 'Login', component: Login }, // Mantido para compatibilidade\r\n     { path: 'cadastrar', component: SignUp },\r\n     { path: 'Cadastrar', component: SignUp }, // Mantido para compatibilidade3\r\n-    { path: 'transation', component: TransactionLis},\r\n+    { path: 'transation', component: TransactionLi},\r\n     \r\n     // Rota de Layout Principal (Com Navbar)\r\n     {\r\n       \r\n"
+                }
+            ],
+            "date": 1765603074082,
+            "name": "Commit-0",
+            "content": "import { Routes } from '@angular/router';\r\nimport { Home } from './pages/home/home';\r\nimport { Login } from './pages/login/login';\r\nimport { Cards } from './pages/cards/cards';\r\nimport { Invest } from './pages/invest/invest';\r\nimport { Plans } from './pages/plans/plans';\r\nimport { Boletos } from './pages/boletos/boletos';\r\nimport { AfterLogin } from './pages/after-login/after-login';\r\nimport { SignUp } from './pages/sign-up/sign-up';\r\nimport { Pix } from './pages/pix/pix';\r\nimport { Pagar } from './pages/pagar/pagar';\r\nimport { Transferir } from './pages/transferir/transferir';\r\nimport { Extrato } from './pages/extrato/extrato';\r\nimport { MainLayout } from './shared/layout/main-layout';\r\n\r\nexport const routes: Routes = [\r\n    { path: '', component: Home },      // Rota de abertura\r\n    { path: 'login', component: Login },\r\n    { path: 'Login', component: Login }, // Mantido para compatibilidade\r\n    { path: 'cadastrar', component: SignUp },\r\n    { path: 'Cadastrar', component: SignUp }, // Mantido para compatibilidade\r\n    \r\n    // Rota de Layout Principal (Com Navbar)\r\n    {\r\n      \r\n        path: 'nav', \r\n        component: MainLayout, \r\n        children: [\r\n            // Rotas de Conteúdo\r\n            { path: '', redirectTo: 'home', pathMatch: 'full' }, \r\n            // Rotas de Conteúdo (Carregadas dentro do MainLayout)\r\n            { path: 'home', component: AfterLogin },\r\n            { path: 'Home', component: AfterLogin }, // Mantido para compatibilidade \r\n            { path: 'Cards', component: Cards },\r\n            { path: 'Invest', component: Invest },\r\n            { path: 'Plans', component: Plans },\r\n            { path: 'Dda', component: Boletos }, // Embora 'Cadastrar' seja mais comum fora do layout logado, mantive aqui\r\n            { path: 'Pix', component: Pix },\r\n            { path: 'Pagar', component: Pagar },\r\n            { path: 'Transferir', component: Transferir },\r\n            { path: 'Extrato', component: Extrato }\r\n        ]\r\n    },\r\n    \r\n    // Rota de Fallback (Opcional, mas recomendado para URLs inválidas)\r\n    { path: '**', redirectTo: '' }\r\n];"
+        }
+    ]
+}

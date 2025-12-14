@@ -1,0 +1,42 @@
+{
+    "sourceFile": "src/app/services/user.service.ts",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 6,
+            "patches": [
+                {
+                    "date": 1765607308885,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1765608006882,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -3,9 +3,9 @@\n import { Observable } from 'rxjs';\r\n \r\n @Injectable({ providedIn: 'root' })\r\n export class UserService {\r\n-  private base = 'http://localhost:8080/Cofry/api';\r\n+  private base = 'http://localhost:8080/Cofry/';\r\n   constructor(private http: HttpClient) {}\r\n \r\n   // Método genérico de GET para qualquer URL da API\r\n   fetch<T>(email: string): Observable<T> {\r\n"
+                },
+                {
+                    "date": 1765608222766,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -3,9 +3,9 @@\n import { Observable } from 'rxjs';\r\n \r\n @Injectable({ providedIn: 'root' })\r\n export class UserService {\r\n-  private base = 'http://localhost:8080/Cofry/';\r\n+  private base = 'http://localhost:8080/Cofry/api/user-data?email=joao.silva45@example.com';\r\n   constructor(private http: HttpClient) {}\r\n \r\n   // Método genérico de GET para qualquer URL da API\r\n   fetch<T>(email: string): Observable<T> {\r\n"
+                },
+                {
+                    "date": 1765608230650,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -3,9 +3,9 @@\n import { Observable } from 'rxjs';\r\n \r\n @Injectable({ providedIn: 'root' })\r\n export class UserService {\r\n-  private base = 'http://localhost:8080/Cofry/api/user-data?email=joao.silva45@example.com';\r\n+  private base = 'http://localhost:8080/Cofry';\r\n   constructor(private http: HttpClient) {}\r\n \r\n   // Método genérico de GET para qualquer URL da API\r\n   fetch<T>(email: string): Observable<T> {\r\n"
+                },
+                {
+                    "date": 1765608236185,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -8,7 +8,7 @@\n   constructor(private http: HttpClient) {}\r\n \r\n   // Método genérico de GET para qualquer URL da API\r\n   fetch<T>(email: string): Observable<T> {\r\n-    return this.http.get<T>(`${this.base}/user-data?email=${encodeURIComponent(email)}`);\r\n+    return this.http.get<T>(`${this.base}/api/user-data?email=joao.silva45@example.com${encodeURIComponent(email)}`);\r\n   }\r\n }\r\n"
+                },
+                {
+                    "date": 1765608243938,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -8,7 +8,7 @@\n   constructor(private http: HttpClient) {}\r\n \r\n   // Método genérico de GET para qualquer URL da API\r\n   fetch<T>(email: string): Observable<T> {\r\n-    return this.http.get<T>(`${this.base}/api/user-data?email=joao.silva45@example.com${encodeURIComponent(email)}`);\r\n+    return this.http.get<T>(`${this.base}/api/user-data?email=${encodeURIComponent(email)}`);\r\n   }\r\n }\r\n"
+                },
+                {
+                    "date": 1765608317305,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,6 +1,6 @@\n import { Injectable } from '@angular/core';\r\n-import { HttpClient,  } from '@angular/common/http';\r\n+import { HttpClient, i } from '@angular/common/http';\r\n import { Observable } from 'rxjs';\r\n \r\n @Injectable({ providedIn: 'root' })\r\n export class UserService {\r\n"
+                }
+            ],
+            "date": 1765607308885,
+            "name": "Commit-0",
+            "content": "import { Injectable } from '@angular/core';\r\nimport { HttpClient } from '@angular/common/http';\r\nimport { Observable } from 'rxjs';\r\n\r\n@Injectable({ providedIn: 'root' })\r\nexport class UserService {\r\n  private base = 'http://localhost:8080/Cofry/api';\r\n  constructor(private http: HttpClient) {}\r\n\r\n  // Método genérico de GET para qualquer URL da API\r\n  fetch<T>(email: string): Observable<T> {\r\n    return this.http.get<T>(`${this.base}/user-data?email=${encodeURIComponent(email)}`);\r\n  }\r\n}\r\n"
+        }
+    ]
+}

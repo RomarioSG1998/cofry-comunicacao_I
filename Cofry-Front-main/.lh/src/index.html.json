@@ -1,0 +1,22 @@
+{
+    "sourceFile": "src/index.html",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 1,
+            "patches": [
+                {
+                    "date": 1765683745740,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1765684053398,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,4 +1,13 @@\n-<link\r\n-  href=\"https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css\"\r\n-  rel=\"stylesheet\"\r\n-/>\r\n+<!doctype html>\r\n+<html lang=\"en\">\r\n+<head>\r\n+  <meta charset=\"utf-8\">\r\n+  <title>CofryFrontEnd</title>\r\n+  <base href=\"/\">\r\n+  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\r\n+  <link rel=\"icon\" type=\"image/x-icon\" href=\"favicon.ico\">\r\n+</head>\r\n+<body>\r\n+  <app-root></app-root>\r\n+</body>\r\n+</html>\r\n"
+                }
+            ],
+            "date": 1765683745740,
+            "name": "Commit-0",
+            "content": "<link\r\n  href=\"https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css\"\r\n  rel=\"stylesheet\"\r\n/>\r\n"
+        }
+    ]
+}
