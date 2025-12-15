@@ -22,7 +22,7 @@
                 {{ item.name }}
             </li>
         </ul>
-        <div class="flex items-center gap-4 sm:gap-6">
+        <div class="flex items-center gap-2 sm:gap-3">
 
             <div class="relative text-gray-500 text-xl cursor-pointer p-2 rounded-full hover:bg-gray-100 transition duration-200">
                 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -36,9 +36,47 @@
                 <span class="text-xs text-gray-500">{{ userPlanName() }}</span>
             </div>
 
-            <div class="w-10 h-10 rounded-full bg-green-100 flex justify-center items-center cursor-pointer">
-                <span class="text-primary-green font-semibold text-base">{{ getUser() }}</span>
+            <div class="relative user-menu-container">
+                <div 
+                    (click)="toggleUserMenu()" 
+                    class="w-10 h-10 rounded-full bg-green-100 flex justify-center items-center cursor-pointer hover:bg-green-200 transition-colors"
+                >
+                    <span class="text-primary-green font-semibold text-base">{{ getUser() }}</span>
+                </div>
+                <!-- Menu dropdown -->
+                <div 
+                    *ngIf="userMenuOpen()"
+                    class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg py-2 z-50 border border-gray-200"
+                >
+                    <div class="px-4 py-2 border-b border-gray-200">
+                        <p class="text-sm font-semibold text-gray-900">{{ displayUserName }}</p>
+                        <p class="text-xs text-gray-500">{{ userPlanName() }}</p>
+                    </div>
+                    <button 
+                        (click)="logout()" 
+                        class="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors flex items-center"
+                    >
+                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+                        </svg>
+                        Sair
+                    </button>
+                </div>
             </div>
+
+            <!-- Botão de logout sempre visível e destacado -->
+            <button 
+                (click)="logout()" 
+                type="button"
+                class="!flex !items-center !justify-center gap-2 px-3 py-2 text-sm font-semibold text-white !bg-red-600 hover:!bg-red-700 rounded-lg shadow-md hover:shadow-lg transition-all duration-200 cursor-pointer"
+                style="min-width: 70px; display: flex !important; visibility: visible !important; opacity: 1 !important; background-color: #dc2626 !important;"
+                title="Sair da conta"
+            >
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" style="display: block;">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                </svg>
+                <span style="display: inline-block;">Sair</span>
+            </button>
 
             <button (click)="toggleMenu()" class="lg:hidden text-gray-700 text-2xl p-2 rounded-lg hover:bg-gray-100 transition duration-200">
                 <i class="fa-solid" [class.fa-bars]="!menuOpen()" [class.fa-xmark]="menuOpen()"></i>
@@ -63,10 +101,16 @@
         </li>
         
         <li class="pt-4 border-t mt-4 sm:hidden">
-            <div class="flex flex-col">
+            <div class="flex flex-col mb-2">
                 <span class="text-sm font-semibold text-gray-900">{{ displayUserName }}</span>
                 <span class="text-xs text-gray-500">{{ userPlanName() }}</span>
             </div>
+            <button (click)="logout(); toggleMenu()" class="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 rounded-lg transition-colors flex items-center">
+                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+                </svg>
+                Sair
+            </button>
         </li>
     </ul>
 </div>

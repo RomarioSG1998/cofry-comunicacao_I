@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 export interface Plan {
   id: string;
@@ -16,14 +17,26 @@ export interface UserPlanResponse {
 
 @Injectable({ providedIn: 'root' })
 export class PlanService {
-  // Adjust the base URL to your backend API
-  private readonly baseUrl = '/api';
+  private readonly baseUrl = 'http://localhost:8082/api';
 
   constructor(private http: HttpClient) {}
 
   // Returns all available plans from the backend
-  getAllPlans(): Observable<Plan[]> {
-    return this.http.get<Plan[]>(`${this.baseUrl}/plans`);
+  getAllPlans(): Observable<any> {
+    return this.http.get<any>(`${this.baseUrl}/subscription-plans`).pipe(
+      map((response: any) => {
+        if (response.status === 'sucesso' && response.data) {
+          // Mapear do formato do backend para o formato do frontend
+          return response.data.map((plan: any) => ({
+            id: plan.idPlano?.toString() || '',
+            name: plan.nome || '',
+            price: plan.preco ? parseFloat(plan.preco.toString()) : 0,
+            features: plan.recursos ? plan.recursos.split(',') : []
+          }));
+        }
+        return [];
+      })
+    );
   }
 
   // Returns the current user's plan. You can pass token or userId.

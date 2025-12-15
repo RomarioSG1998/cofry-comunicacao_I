@@ -13,6 +13,7 @@ import { Transferir } from './pages/transferir/transferir';
 import { Extrato } from './pages/extrato/extrato';
 import { MainLayout } from './shared/layout/main-layout';
 import { TransactionListComponent } from './pages/transaction-list/transaction-list.component';
+import { authGuard } from './guards/auth.guard';
 
 
 
@@ -24,11 +25,12 @@ export const routes: Routes = [
     { path: 'Cadastrar', component: SignUp }, // Mantido para compatibilidade3
     { path: 'transation', component: TransactionListComponent},
     
-    // Rota de Layout Principal (Com Navbar)
+    // Rota de Layout Principal (Com Navbar) - Protegida por authGuard
     {
       
         path: 'nav', 
-        component: MainLayout, 
+        component: MainLayout,
+        canActivate: [authGuard],
         children: [
             // Rotas de Conteúdo
             { path: '', redirectTo: 'home', pathMatch: 'full' }, 

@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, signal, OnInit, OnDestroy, Inject, PLATFORM_ID, ChangeDetectorRef } from '@angular/core';
-import { RouterLink, RouterLinkActive } from '@angular/router';
+import { RouterLink, RouterLinkActive, Router } from '@angular/router';
 import { CommonModule, isPlatformBrowser } from '@angular/common'; 
 import { PlanService } from '../../services/plan.service';
 import { AuthService } from '../../services/auth.service';
@@ -15,7 +15,8 @@ export class Navbar implements OnInit, OnDestroy {
     primaryGreen = '#10b981';
 
     // Propriedades e Sinais
-    menuOpen = signal(false); 
+    menuOpen = signal(false);
+    userMenuOpen = signal(false); // Estado para controlar o dropdown do usuário
     userName = signal<string>('Usuário');            
     userInitials = 'CO';      
     userPlanName = signal<string>('Plano');        
@@ -47,6 +48,7 @@ export class Navbar implements OnInit, OnDestroy {
         private planService: PlanService,
         private authService: AuthService,
         private cdr: ChangeDetectorRef,
+        private router: Router,
         @Inject(PLATFORM_ID) private platformId: Object 
     ) {}
 
@@ -92,9 +94,21 @@ export class Navbar implements OnInit, OnDestroy {
                 }
             }, 300);
             
-            // Limpa o interval no destroy
+            // Fechar menu ao clicar fora
+            const clickHandler = (event: MouseEvent) => {
+                const target = event.target as HTMLElement;
+                if (!target.closest('.user-menu-container')) {
+                    this.closeUserMenu();
+                }
+            };
+            document.addEventListener('click', clickHandler);
+            
+            // Limpa o interval e remove listener no destroy
             if (this.userNameSubscription) {
-                this.userNameSubscription.add(() => clearInterval(checkInterval));
+                this.userNameSubscription.add(() => {
+                    clearInterval(checkInterval);
+                    document.removeEventListener('click', clickHandler);
+                });
             }
         }
     }
@@ -169,6 +183,20 @@ export class Navbar implements OnInit, OnDestroy {
     toggleMenu(): void {
         this.menuOpen.update((value: boolean) => !value);
     }
+
+    /**
+     * Alterna o estado do menu dropdown do usuário.
+     */
+    toggleUserMenu(): void {
+        this.userMenuOpen.update((value: boolean) => !value);
+    }
+
+    /**
+     * Fecha o menu dropdown do usuário.
+     */
+    closeUserMenu(): void {
+        this.userMenuOpen.set(false);
+    }
     
     // Lista de itens
     navItems = [
@@ -178,4 +206,21 @@ export class Navbar implements OnInit, OnDestroy {
         { path: '/nav/Plans', name: 'Planos' },
         { path: '/nav/Dda', name: 'Boletos' }
     ];
+
+    /**
+     * Realiza o logout do usuário
+     */
+    logout(): void {
+        console.log('Navbar - logout() chamado');
+        // Fechar menu antes de fazer logout
+        this.closeUserMenu();
+        
+        // Limpar dados do usuário
+        this.authService.logout();
+        
+        // Redirecionar para a página inicial
+        this.router.navigate(['/']).catch(() => {
+            window.location.href = '/';
+        });
+    }
 }

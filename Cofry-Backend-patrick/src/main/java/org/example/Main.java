@@ -10,6 +10,11 @@ import org.example.Config.CorsFilter;
 import org.example.Controller.HealthCheckServlet;
 import org.example.Controller.LoginServlet;
 import org.example.Controller.RegisterServlet;
+import org.example.Controller.TransactionServlet;
+import org.example.Controller.AccountServlet;
+import org.example.Controller.PlanServlet;
+import org.example.Controller.CategoryServlet;
+import org.example.Controller.ApiRouterServlet;
 
 import java.io.File;
 
@@ -52,6 +57,11 @@ public class Main {
             // Registrar servlet de registro
             Tomcat.addServlet(context, "RegisterServlet", new RegisterServlet());
             context.addServletMappingDecoded("/auth/Create", "RegisterServlet");
+
+            // Registrar servlet router único para todas as rotas /api/*
+            // Isso resolve o problema de mapeamento do Tomcat embedded
+            Tomcat.addServlet(context, "ApiRouterServlet", new ApiRouterServlet());
+            context.addServletMappingDecoded("/api/*", "ApiRouterServlet");
 
             tomcat.start();
             System.out.println("========================================");

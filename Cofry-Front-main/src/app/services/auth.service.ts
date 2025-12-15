@@ -77,6 +77,23 @@ export class AuthService {
     localStorage.removeItem('userName');
     localStorage.removeItem('userEmail');
     localStorage.removeItem('userId');
+    localStorage.removeItem('token');
+    localStorage.removeItem('userPlan');
     this.userNameSubject.next('');
+    console.log('AuthService - Dados do usuário limpos');
+  }
+
+  logout(): void {
+    this.clearUserData();
+    console.log('AuthService - Logout realizado');
+  }
+
+  isAuthenticated(): boolean {
+    if (!isPlatformBrowser(this.platformId)) {
+      return false;
+    }
+    const userId = localStorage.getItem('userId');
+    const userName = localStorage.getItem('userName');
+    return !!(userId && userName);
   }
 }
