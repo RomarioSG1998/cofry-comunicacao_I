@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class UserService {
-  private base = 'http://localhost:8082';
+  private base = 'http://localhost:8081';
   constructor(private http: HttpClient) {}
 
   // Método genérico de GET para qualquer URL da API

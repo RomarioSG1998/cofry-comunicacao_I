@@ -7,7 +7,7 @@ import { Observable, map } from 'rxjs';
 @Injectable({ providedIn: 'root' })
 export class TransactionService {
 
-  private apiUrl = 'http://localhost:8082/api/transactions';
+  private apiUrl = 'http://localhost:8081/api/transactions';
 
   constructor(
     private http: HttpClient,

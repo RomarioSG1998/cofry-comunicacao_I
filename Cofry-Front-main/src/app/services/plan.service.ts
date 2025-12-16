@@ -17,7 +17,7 @@ export interface UserPlanResponse {
 
 @Injectable({ providedIn: 'root' })
 export class PlanService {
-  private readonly baseUrl = 'http://localhost:8082/api';
+  private readonly baseUrl = 'http://localhost:8081/api';
 
   constructor(private http: HttpClient) {}
 

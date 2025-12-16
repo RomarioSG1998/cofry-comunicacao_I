@@ -12,7 +12,7 @@ export interface Account {
 
 @Injectable({ providedIn: 'root' })
 export class AccountService {
-  private apiUrl = 'http://localhost:8082/api/accounts';
+  private apiUrl = 'http://localhost:8081/api/accounts';
 
   constructor(
     private http: HttpClient,

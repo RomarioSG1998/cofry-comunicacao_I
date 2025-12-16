@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class SignUpService {
-  private base = 'http://localhost:8082';
+  private base = 'http://localhost:8081';
   constructor(private http: HttpClient) {}
 
   register(usuario: any): Observable<any> {

@@ -72,11 +72,12 @@
 #### Frontend - Ajustes Necessários:
 
 1. **URLs dos Serviços**
-   - ✅ LoginService - Já corrigido (porta 8082)
-   - ✅ SignUpService - Já corrigido (porta 8082)
-   - ❌ PlanService - Precisa corrigir URL (está usando `/api` sem porta)
-   - ❌ TransactionService - Já está na porta 8082 (OK)
-   - ❌ UserService - Endpoint `/api/user-data` não existe, precisa criar
+   - ✅ LoginService - Já corrigido (porta 8080)
+   - ✅ SignUpService - Já corrigido (porta 8080)
+   - ✅ PlanService - Já corrigido (porta 8080)
+   - ✅ TransactionService - Já está na porta 8080 (OK)
+   - ✅ AccountService - Já está na porta 8080 (OK)
+   - ✅ UserService - Já está na porta 8080 (OK)
 
 2. **Mapeamento de Dados**
    - Ajustar modelo Transaction do frontend para corresponder ao backend
@@ -201,7 +202,7 @@ public class EntityServlet extends HttpServlet {
 
 ### URLs dos Serviços Frontend:
 
-Todos devem usar: `http://localhost:8082/api/...`
+Todos devem usar: `http://localhost:8081/api/...`
 
 ## 📊 PRIORIZAÇÃO POR USO
 
@@ -217,7 +218,7 @@ Todos devem usar: `http://localhost:8082/api/...`
 
 - [x] Todos os servlets criados (TransactionServlet, AccountServlet, PlanServlet, CategoryServlet, ApiRouterServlet)
 - [x] Todos os servlets registrados no Main.java
-- [x] ApiRouterServlet criado como solução alternativa para mapeamento
+- [x] ApiRouterServlet criado como solução ernativa para mapeamento
 - [x] Todas as URLs dos serviços frontend corrigidas
 - [x] Modelos do frontend correspondem aos do backend (com mapeamento)
 - [x] Tratamento de erros implementado
