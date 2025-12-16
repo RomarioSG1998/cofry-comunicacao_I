@@ -13,7 +13,7 @@ import { Transferir } from './pages/transferir/transferir';
 import { Extrato } from './pages/extrato/extrato';
 import { MainLayout } from './shared/layout/main-layout';
 import { TransactionListComponent } from './pages/transaction-list/transaction-list.component';
-import { authGuard } from './guards/auth.guard';
+import { Profile } from './pages/profile/profile';
 
 
 
@@ -25,17 +25,17 @@ export const routes: Routes = [
     { path: 'Cadastrar', component: SignUp }, // Mantido para compatibilidade3
     { path: 'transation', component: TransactionListComponent},
     
-    // Rota de Layout Principal (Com Navbar) - Protegida por authGuard
+    // Rota de Layout Principal (Com Navbar)
     {
       
         path: 'nav', 
-        component: MainLayout,
-        canActivate: [authGuard],
+        component: MainLayout, 
         children: [
             // Rotas de Conteúdo
             { path: '', redirectTo: 'home', pathMatch: 'full' }, 
+            // Rotas de Conteúdo (Carregadas dentro do MainLayout)
             { path: 'home', component: AfterLogin },
-            { path: 'Home', component: AfterLogin }, // Mantido para compatibilidade
+            { path: 'Home', component: AfterLogin }, // Mantido para compatibilidade 
             { path: 'Cards', component: Cards },
             { path: 'Invest', component: Invest },
             { path: 'Plans', component: Plans },
@@ -43,7 +43,9 @@ export const routes: Routes = [
             { path: 'Pix', component: Pix },
             { path: 'Pagar', component: Pagar },
             { path: 'Transferir', component: Transferir },
-            { path: 'Extrato', component: Extrato }
+            { path: 'Extrato', component: Extrato },
+            { path: 'Profile', component: Profile },
+            { path: 'Perfil', component: Profile }
         ]
     },
     

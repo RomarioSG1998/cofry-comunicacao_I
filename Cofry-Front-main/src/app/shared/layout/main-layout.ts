@@ -9,11 +9,11 @@ import { Navbar } from '../navbar/navbar'; // Assumindo que este import está co
   imports: [CommonModule, Navbar, RouterOutlet],
   template: `
     <app-navbar></app-navbar> 
-    <router-outlet></router-outlet>
+    <main> 
+      <router-outlet></router-outlet>
+    </main>
   `
 })
 export class MainLayout {
-  constructor() {
-    console.log('MainLayout - Componente carregado');
-  }
+    // ... navItems estão corretos, mas o path no AfterLogin deve ser resolvido no roteador
 }

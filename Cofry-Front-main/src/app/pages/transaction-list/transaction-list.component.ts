@@ -5,6 +5,7 @@ import { AuthService } from '../../services/auth.service';
 import { formatDate } from '@angular/common';
 import { CommonModule } from '@angular/common';
 import { TransactionCardComponent } from "../../shared/transaction-card/transaction-card";
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-transaction-list',
@@ -21,7 +22,8 @@ export class TransactionListComponent implements OnInit {
 
   constructor(
     private transactionService: TransactionService,
-    private authService: AuthService
+    private authService: AuthService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -30,7 +32,7 @@ export class TransactionListComponent implements OnInit {
   }
 
   loadTransactions() {
-    this.transactionService. getTransactionsByUser().subscribe({
+    this.transactionService.getTransactionsByUser().subscribe({
         next: data => this.transactions = data,
         error: err => console.error(err)
     });
@@ -57,5 +59,39 @@ export class TransactionListComponent implements OnInit {
   setFilter(type: string) {
     this.filter = type;
     this.groupTransactionsByDate();  // Refiltra após mudança
+  }
+
+  // Abre o formulário para editar transação (redireciona para a página de extrato ou after-login)
+  openEditTransactionForm(transaction: Transaction): void {
+    // Redireciona para a página de extrato onde o usuário pode editar
+    this.router.navigate(['/nav/Extrato']);
+    // Alternativamente, poderia abrir um modal ou formulário inline aqui
+  }
+
+  // Exclui uma transação
+  deleteTransaction(transaction: Transaction): void {
+    if (!transaction || !transaction.id) {
+      alert('Erro: transação inválida. Não é possível excluir.');
+      return;
+    }
+
+    if (!confirm(`Tem certeza que deseja excluir a movimentação "${transaction.descricao}"?`)) {
+      return;
+    }
+
+    this.transactionService.deleteTransaction(transaction.id).subscribe({
+      next: () => {
+        alert('Movimentação excluída com sucesso!');
+        this.loadTransactions(); // Recarrega a lista
+      },
+      error: (error) => {
+        console.error('Erro ao excluir transação:', error);
+        let errorMessage = 'Erro ao excluir movimentação. Tente novamente.';
+        if (error.error?.error) {
+          errorMessage = error.error.error;
+        }
+        alert(errorMessage);
+      }
+    });
   }
 }

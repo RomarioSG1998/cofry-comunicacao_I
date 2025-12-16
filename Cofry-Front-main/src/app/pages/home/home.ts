@@ -1,11 +1,9 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
 // Remover FormsModule, pois ReactiveFormsModule já é suficiente.
 import { ReactiveFormsModule, FormBuilder, Validators, FormGroup } from '@angular/forms'; 
 import { Login } from '../login/login'; // Importar Login
 import { SignUp } from '../sign-up/sign-up'; // Importar SignUp
-import { AuthService } from '../../services/auth.service';
 
 // Definindo todos os estados possíveis da aplicação
 type ViewState = 'landing' | 'about' | 'services' | 'prices' | 'login' | 'signup' | 'dashboard' | 'pix' | 'statement';
@@ -25,9 +23,6 @@ export class Home {
   // Removido this.fb e os FormGroups de Login/Signup que estavam duplicados.
   hoverPlan: PlanType = null;
   selectedPlan: PlanType = 'start'; // Define 'start' como padrão
-  
-  private router = inject(Router);
-  private authService = inject(AuthService);
 
   // ... (isLoggedIn, setView, handleLoginSuccess, goToSignupView, doSignup, logout, toggleBalance)
 
@@ -38,7 +33,7 @@ export class Home {
 
   selectPlan(plan: PlanType) {
     this.selectedPlan = plan;
-    alert(`Plano ${plan} selecionado!`);
+    
   }
   isLoggedIn(): boolean {
     return ['dashboard', 'pix', 'statement'].includes(this.currentView);
@@ -51,8 +46,8 @@ export class Home {
 
   // Novo método para tratar o sucesso do login (emitido pelo componente Login)
   handleLoginSuccess() {
-    this.currentView = 'dashboard';
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    // Redireciona para a rota de dashboard após login bem-sucedido
+    window.location.href = '/nav/Home';
   }
 
   // Novo método para tratar o clique no link de cadastro (emitido pelo componente Login)
@@ -61,30 +56,23 @@ export class Home {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
-  // doLogin e doSignup removidos ou adaptados se necessário.
-  // Mantendo o doSignup apenas como alerta, por enquanto
+  // Método chamado quando o signup é bem-sucedido
   doSignup(event?: Event) {
     if(event) event.preventDefault();
-    alert('Cadastro realizado! Faça login.');
-    this.currentView = 'login'; // Depois de cadastrar, volta para a tela de login
+    // Muda para a view de login após cadastro bem-sucedido
+    this.currentView = 'login';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
   logout() {
-    // Limpar dados do usuário
-    this.authService.logout();
-    
-    // Redirecionar para a página de login
     this.currentView = 'landing';
     window.scrollTo({ top: 0, behavior: 'smooth' });
-    
-    // Se estiver em uma rota protegida, redirecionar para home
-    this.router.navigate(['/']).catch(() => {
-      // Se falhar, usar window.location
-      window.location.href = '/';
-    });
   }
 
   toggleBalance() {
     this.showBalance = !this.showBalance;
   }
 }
+
+
+

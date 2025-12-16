@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
 
 export interface Plan {
   id: string;
@@ -17,35 +16,47 @@ export interface UserPlanResponse {
 
 @Injectable({ providedIn: 'root' })
 export class PlanService {
-  private readonly baseUrl = 'http://localhost:8081/api';
+  private readonly baseUrl = 'http://localhost:8080/api';
 
   constructor(private http: HttpClient) {}
 
-  // Returns all available plans from the backend
-  getAllPlans(): Observable<any> {
-    return this.http.get<any>(`${this.baseUrl}/subscription-plans`).pipe(
-      map((response: any) => {
-        if (response.status === 'sucesso' && response.data) {
-          // Mapear do formato do backend para o formato do frontend
-          return response.data.map((plan: any) => ({
-            id: plan.idPlano?.toString() || '',
-            name: plan.nome || '',
-            price: plan.preco ? parseFloat(plan.preco.toString()) : 0,
-            features: plan.recursos ? plan.recursos.split(',') : []
-          }));
-        }
-        return [];
-      })
-    );
+  /**
+   * Retorna todos os planos disponíveis
+   * NOTA: Esta rota pode não existir na API. O planId vem do objeto User.
+   */
+  getAllPlans(): Observable<Plan[]> {
+    // Se a rota não existir, retornar array vazio ou usar dados do UserService
+    return this.http.get<Plan[]>(`${this.baseUrl}/plans`);
   }
 
-  // Returns the current user's plan. You can pass token or userId.
+  /**
+   * Retorna o plano do usuário atual
+   * NOTA: Esta rota pode não existir. Use UserService.getUserById() e pegue o planId.
+   */
   getUserPlanByToken(token: string): Observable<UserPlanResponse> {
     const headers = new HttpHeaders({ Authorization: `Bearer ${token}` });
     return this.http.get<UserPlanResponse>(`${this.baseUrl}/users/me/plan`, { headers });
   }
 
+  /**
+   * Retorna o plano de um usuário por ID
+   * NOTA: Esta rota pode não existir. Use UserService.getUserById() e pegue o planId.
+   */
   getUserPlanById(userId: string): Observable<UserPlanResponse> {
     return this.http.get<UserPlanResponse>(`${this.baseUrl}/users/${userId}/plan`);
+  }
+
+  /**
+   * Mapeamento local de planos (fallback se API não tiver rota de planos)
+   */
+  getPlanNameById(planId: number): string {
+    const plansMap: { [key: number]: string } = {
+      1: 'Cofry Start',
+      2: 'Cofry Pro',
+      3: 'Cofry Black',
+      4: 'Cofry Invest Plus',
+      5: 'Cofry Max'
+    };
+    return plansMap[planId] || 'Plano';
   }
 }

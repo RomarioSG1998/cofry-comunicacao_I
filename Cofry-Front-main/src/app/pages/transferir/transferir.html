@@ -1,1 +1,114 @@
-<p>transferir works!</p>
+<div class="min-h-screen bg-slate-50 text-slate-900 font-sans pb-20">
+  <main class="max-w-4xl mx-auto px-6 pt-8 space-y-6">
+    
+    <!-- Header -->
+    <div class="flex items-center gap-4 mb-8">
+      <button 
+        (click)="goBack()"
+        class="w-10 h-10 rounded-full bg-white border border-slate-200 flex items-center justify-center hover:bg-slate-50 transition-colors">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="15 18 9 12 15 6"></polyline>
+        </svg>
+      </button>
+      <div>
+        <h1 class="text-3xl font-bold text-slate-800">Transferir</h1>
+        <p class="text-slate-500 text-sm">Realize transferências PIX para outros usuários</p>
+      </div>
+    </div>
+
+    <!-- Card de Saldo -->
+    <div class="bg-gradient-to-br from-slate-900 to-slate-800 rounded-3xl p-6 text-white shadow-xl">
+      <p class="text-slate-300 text-sm mb-2">Saldo Disponível</p>
+      <h2 class="text-4xl font-bold">R$ {{ currentBalance.toFixed(2).replace('.', ',') }}</h2>
+    </div>
+
+    <!-- Formulário de Transferência -->
+    <div class="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm">
+      <form [formGroup]="transferForm" (ngSubmit)="onSubmit()" class="space-y-6">
+        
+        <!-- Buscar Destinatário -->
+        <div class="space-y-2">
+          <label class="text-sm font-bold text-slate-700">Destinatário (CPF ou Email)</label>
+          <div class="flex gap-3">
+            <input 
+              type="text" 
+              formControlName="destination"
+              class="flex-1 px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500 transition-all"
+              [class.border-red-400]="isFieldInvalid('destination')"
+              placeholder="000.000.000-00 ou email@exemplo.com">
+            <button 
+              type="button"
+              (click)="searchUser()"
+              [disabled]="isSearching || !transferForm.get('destination')?.value"
+              class="px-6 py-3 bg-emerald-600 hover:bg-emerald-700 disabled:bg-emerald-400 disabled:cursor-not-allowed text-white font-semibold rounded-xl transition-all">
+              <span *ngIf="!isSearching">Buscar</span>
+              <span *ngIf="isSearching">Buscando...</span>
+            </button>
+          </div>
+          <small *ngIf="isFieldInvalid('destination')" class="text-red-500 text-xs">
+            {{ getFieldError('destination') }}
+          </small>
+        </div>
+
+        <!-- Informações do Destinatário -->
+        <div *ngIf="destinationUser" class="bg-emerald-50 border border-emerald-200 rounded-xl p-4">
+          <p class="text-sm font-semibold text-emerald-800 mb-1">Destinatário encontrado:</p>
+          <p class="text-lg font-bold text-slate-800">{{ destinationUser.firstName }} {{ destinationUser.lastName }}</p>
+          <p class="text-sm text-slate-600">{{ destinationUser.email }}</p>
+        </div>
+
+        <!-- Valor -->
+        <div class="space-y-2">
+          <label class="text-sm font-bold text-slate-700">Valor</label>
+          <div class="relative">
+            <span class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 font-semibold">R$</span>
+            <input 
+              type="number" 
+              formControlName="amount"
+              step="0.01"
+              min="0.01"
+              class="w-full pl-12 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500 transition-all"
+              [class.border-red-400]="isFieldInvalid('amount')"
+              placeholder="0,00">
+          </div>
+          <small *ngIf="isFieldInvalid('amount')" class="text-red-500 text-xs">
+            {{ getFieldError('amount') }}
+          </small>
+          <small *ngIf="transferForm.get('amount')?.value && getAmountValue() > currentBalance" class="text-red-500 text-xs">
+            Saldo insuficiente. Saldo disponível: R$ {{ currentBalance.toFixed(2).replace('.', ',') }}
+          </small>
+        </div>
+
+        <!-- Descrição -->
+        <div class="space-y-2">
+          <label class="text-sm font-bold text-slate-700">Descrição</label>
+          <input 
+            type="text" 
+            formControlName="description"
+            class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500 transition-all"
+            [class.border-red-400]="isFieldInvalid('description')"
+            placeholder="Ex: Pagamento de serviços">
+          <small *ngIf="isFieldInvalid('description')" class="text-red-500 text-xs">
+            {{ getFieldError('description') }}
+          </small>
+        </div>
+
+        <!-- Botão de Enviar -->
+        <button 
+          type="submit"
+          [disabled]="isLoading || !destinationUser || transferForm.invalid"
+          class="w-full py-4 bg-emerald-600 hover:bg-emerald-700 disabled:bg-emerald-400 disabled:cursor-not-allowed text-white font-bold rounded-xl shadow-lg shadow-emerald-600/20 transition-all transform hover:-translate-y-1">
+          <span *ngIf="!isLoading">Transferir</span>
+          <span *ngIf="isLoading" class="flex items-center justify-center gap-2">
+            <svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            Processando...
+          </span>
+        </button>
+      </form>
+    </div>
+
+  </main>
+</div>

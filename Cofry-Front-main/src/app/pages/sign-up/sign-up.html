@@ -1,9 +1,10 @@
 <div class="min-h-screen text-slate-900 overflow-hidden relative font-sans flex items-center justify-center py-10">
   
-   <main class="relative z-10 w-full max-w-xl px-6">
+   <main class="relative z-10 w-full max-w-2xl px-6">
      
      <div class="w-full bg-white/60 backdrop-blur-xl border border-white/40 rounded-3xl shadow-[0_30px_60px_-12px_rgba(0,0,0,0.15)] p-8 md:p-10 animate-fade-in-up">
         
+        <!-- Logo -->
         <div class="flex justify-center mb-6">
             <div class="flex items-center gap-2 cursor-pointer">
                 <div class="w-8 h-8 bg-gradient-to-tr from-emerald-500 to-emerald-700 rounded-lg flex items-center justify-center shadow-lg shadow-emerald-500/30">
@@ -13,83 +14,377 @@
             </div>
         </div>
 
+        <!-- Indicador de Progresso -->
+        <div class="mb-8">
+            <div class="flex items-center justify-between mb-2">
+                <span class="text-sm font-semibold text-slate-700">Passo {{ currentStep }} de {{ totalSteps }}</span>
+                <span class="text-sm text-slate-500">{{ Math.round((currentStep / totalSteps) * 100) }}%</span>
+            </div>
+            <div class="w-full bg-slate-200 rounded-full h-2">
+                <div class="bg-emerald-600 h-2 rounded-full transition-all duration-300" 
+                     [style.width.%]="(currentStep / totalSteps) * 100"></div>
+            </div>
+        </div>
 
-        <form [formGroup]="signupForm" (ngSubmit)="onSubmit()" class="space-y-4">
-<!--
+        <!-- Step 1: Dados Pessoais -->
+        <form *ngIf="currentStep === 1" [formGroup]="personalDataForm" class="space-y-4">
+            <h2 class="text-2xl font-bold text-slate-800 mb-6">Dados Pessoais</h2>
+              
+            <!-- Nome Completo -->
               <div class="space-y-1">
-              <label class="text-sm font-bold text-slate-700 ml-1">
-               Nome Completo</label>
-               <input type="text" formControlName="nome" class="w-full pl-4 pr-4 py-3 bg-white/50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500 transition-all text-slate-800 placeholder:text-slate-400" placeholder="Seu nome completo">
-              </div>
--->
-               <div class="space-y-1">
-                  <label for="nome" class="text-sm font-bold text-slate-700 ml-1">Nome Completo</label>
-                  <input type="text" id="nome" formControlName="nome" class="w-full pl-4 pr-4 py-3 bg-white/50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500 transition-all text-slate-800 placeholder:text-slate-400" placeholder="Seu nome completo">
-                  <small *ngIf="signupForm.get('nome')?.invalid && signupForm.get('nome')?.touched" class="error-msg">
-                     Nome é obrigatório (min 3 letras).
+                <label for="fullName" class="text-sm font-bold text-slate-700 ml-1">Nome Completo</label>
+                <input 
+                    type="text" 
+                    id="fullName" 
+                    formControlName="fullName" 
+                    class="w-full pl-4 pr-4 py-3 bg-white/50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500 transition-all text-slate-800 placeholder:text-slate-400" 
+                    placeholder="Seu nome completo">
+                <small *ngIf="isFieldInvalid(personalDataForm, 'fullName')" class="text-red-500 text-xs ml-1">
+                    Nome completo é obrigatório (mínimo 3 caracteres).
                   </small>
                </div>
                      
-
-               
+            <!-- Email -->
                <div class="space-y-1">
                   <label for="email" class="text-sm font-bold text-slate-700 ml-1">Email</label>
-                  <input type="text" id="email" formControlName="email" class="w-full pl-4 pr-4 py-3 bg-white/50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500 transition-all text-slate-800 placeholder:text-slate-400" placeholder="seu@email.com">
-                  <small *ngIf="signupForm.get('email')?.invalid && signupForm.get('email')?.touched" class="error-msg">
-                    email burro
+                <input 
+                    type="email" 
+                    id="email" 
+                    formControlName="email" 
+                    class="w-full pl-4 pr-4 py-3 bg-white/50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500 transition-all text-slate-800 placeholder:text-slate-400" 
+                    placeholder="seu@email.com">
+                <small *ngIf="isFieldInvalid(personalDataForm, 'email')" class="text-red-500 text-xs ml-1">
+                    Email inválido
                   </small>
                </div>
 
+            <!-- CPF e Data de Nascimento -->
+            <div class="grid grid-cols-2 gap-4">
+                <div class="space-y-1">
+                    <label for="cpf" class="text-sm font-bold text-slate-700 ml-1">CPF</label>
+                    <input 
+                        type="text" 
+                        id="cpf" 
+                        formControlName="cpf" 
+                        class="w-full pl-4 pr-4 py-3 bg-white/50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500 transition-all text-slate-800 placeholder:text-slate-400" 
+                        placeholder="000.000.000-00">
+                    <small *ngIf="isFieldInvalid(personalDataForm, 'cpf')" class="text-red-500 text-xs ml-1">
+                        CPF é obrigatório
+                    </small>
+                </div>
 
                <div class="space-y-1">
-                  <label for="dateOfBirth" class="text-sm font-bold text-slate-700 ml-1">ze</label>
+                    <label for="dateOfBirth" class="text-sm font-bold text-slate-700 ml-1">Data de Nascimento</label>
                   <input 
                       type="date"
+                        id="dateOfBirth"
                        formControlName="dateOfBirth"
-                       class="w-full pl-11 pr-4 py-3 bg-white/50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500 transition-all text-slate-800 placeholder:text-slate-400">
-               <small *ngIf="signupForm.get('dateOfBirth')?.invalid && signupForm.get('dateOfBirth')?.touched" class="error-msg">
+                        class="w-full pl-4 pr-4 py-3 bg-white/50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500 transition-all text-slate-800 placeholder:text-slate-400">
+                    <small *ngIf="isFieldInvalid(personalDataForm, 'dateOfBirth')" class="text-red-500 text-xs ml-1">
                     Data de nascimento é obrigatória.
                   </small>
-
+                </div>
                </div>
 
-
-                 
-              
-
-
-         
+            <!-- Telefone e Senha -->
               <div class="grid grid-cols-2 gap-4">
                   <div class="space-y-1">
-                  <label for="cpf" class="text-sm font-bold text-slate-700 ml-1">CPF</label>
-                  <input type="text" formControlName="cpf" class="w-full pl-4 pr-4 py-3 bg-white/50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500 transition-all text-slate-800 placeholder:text-slate-400" placeholder="000.000.000-00">
-                  <small *ngIf="signupForm.get('cpf')?.invalid && signupForm.get('cpf')?.touched" class="error-msg">
-                    CPF inválido
-                  </small>
+                    <label for="phoneNumber" class="text-sm font-bold text-slate-700 ml-1">Telefone (Opcional)</label>
+                    <input 
+                        type="text" 
+                        id="phoneNumber" 
+                        formControlName="phoneNumber" 
+                        class="w-full pl-4 pr-4 py-3 bg-white/50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500 transition-all text-slate-800 placeholder:text-slate-400" 
+                        placeholder="(11) 98765-4321">
                </div>
+
                <div class="space-y-1">
                   <label for="password" class="text-sm font-bold text-slate-700 ml-1">Senha</label>
-                  <input type="password" formControlName="password" class="w-full pl-4 pr-4 py-3 bg-white/50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500 transition-all text-slate-800 placeholder:text-slate-400" placeholder="********">
-                  <small *ngIf="signupForm.get('password')?.invalid && signupForm.get('password')?.touched" class="error-msg">
-                    senha o bobo alegre
+                    <input 
+                        type="password" 
+                        id="password" 
+                        formControlName="password" 
+                        class="w-full pl-4 pr-4 py-3 bg-white/50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500 transition-all text-slate-800 placeholder:text-slate-400" 
+                        placeholder="Mínimo 6 caracteres">
+                    <small *ngIf="isFieldInvalid(personalDataForm, 'password')" class="text-red-500 text-xs ml-1">
+                        Senha deve ter no mínimo 6 caracteres
                   </small>
                </div>
               </div>
            
-
+            <!-- Seleção de Plano -->
+            <div class="space-y-1">
+                <label class="text-sm font-bold text-slate-700 ml-1 mb-3 block">Escolha seu Plano</label>
+                <div class="grid grid-cols-1 gap-3">
+                    <div *ngFor="let plan of plans" 
+                         class="p-4 border-2 rounded-xl cursor-pointer transition-all"
+                         [class.border-emerald-500]="personalDataForm.get('planId')?.value === plan.id"
+                         [class.border-slate-200]="personalDataForm.get('planId')?.value !== plan.id"
+                         [class.bg-emerald-50]="personalDataForm.get('planId')?.value === plan.id"
+                         (click)="personalDataForm.patchValue({ planId: plan.id })">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <h4 class="font-bold text-slate-800">{{ plan.name }}</h4>
+                                <p class="text-xs text-slate-500">{{ plan.description }}</p>
+                            </div>
+                            <div class="text-right">
+                                <span class="text-lg font-bold text-slate-800">R$ {{ plan.price.toFixed(2).replace('.', ',') }}</span>
+                                <span class="text-xs text-slate-500">/mês</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <input type="hidden" formControlName="planId">
+                <small *ngIf="isFieldInvalid(personalDataForm, 'planId')" class="text-red-500 text-xs ml-1">
+                    Selecione um plano
+                </small>
+            </div>
+           
+            <!-- Botão Próximo -->
             <button
-            type="submit"
-            class="flex-1 py-4 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl shadow-lg shadow-emerald-600/20 transition-all transform hover:-translate-y-1 flex justify-center items-center gap-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed">
-            Criar Conta 
+                type="button"
+                (click)="nextStep()"
+                class="w-full py-4 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl shadow-lg shadow-emerald-600/20 transition-all transform hover:-translate-y-1 flex justify-center items-center gap-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed">
+                Próximo
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="9 18 15 12 9 6"></polyline>
+                </svg>
             </button>
         </form>
           
-       
+        <!-- Step 2: Endereço -->
+        <form *ngIf="currentStep === 2" [formGroup]="addressForm" class="space-y-4">
+            <h2 class="text-2xl font-bold text-slate-800 mb-6">Endereço</h2>
+
+            <!-- CEP -->
+            <div class="space-y-1">
+                <label for="zipCode" class="text-sm font-bold text-slate-700 ml-1">CEP</label>
+                <div class="relative">
+                    <input 
+                        type="text" 
+                        id="zipCode" 
+                        formControlName="zipCode" 
+                        (blur)="onCepBlur()"
+                        class="w-full pl-4 pr-4 py-3 bg-white/50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500 transition-all text-slate-800 placeholder:text-slate-400" 
+                        placeholder="00000-000"
+                        maxlength="9">
+                    <span *ngIf="isLoadingCep" class="absolute right-4 top-3.5 text-emerald-500">
+                        <svg class="animate-spin h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                    </span>
+                </div>
+                <small *ngIf="isFieldInvalid(addressForm, 'zipCode')" class="text-red-500 text-xs ml-1">
+                    CEP é obrigatório
+                </small>
+            </div>
+
+            <!-- Rua e Número -->
+            <div class="grid grid-cols-3 gap-4">
+                <div class="col-span-2 space-y-1">
+                    <label for="street" class="text-sm font-bold text-slate-700 ml-1">Rua</label>
+                    <input 
+                        type="text" 
+                        id="street" 
+                        formControlName="street" 
+                        class="w-full pl-4 pr-4 py-3 bg-white/50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500 transition-all text-slate-800 placeholder:text-slate-400" 
+                        placeholder="Nome da rua">
+                    <small *ngIf="isFieldInvalid(addressForm, 'street')" class="text-red-500 text-xs ml-1">
+                        Rua é obrigatória
+                    </small>
+                </div>
+                
+                <div class="space-y-1">
+                    <label for="number" class="text-sm font-bold text-slate-700 ml-1">Número</label>
+                    <input 
+                        type="text" 
+                        id="number" 
+                        formControlName="number" 
+                        class="w-full pl-4 pr-4 py-3 bg-white/50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500 transition-all text-slate-800 placeholder:text-slate-400" 
+                        placeholder="123">
+                    <small *ngIf="isFieldInvalid(addressForm, 'number')" class="text-red-500 text-xs ml-1">
+                        Número é obrigatório
+                    </small>
+                </div>
+            </div>
+
+            <!-- Complemento -->
+            <div class="space-y-1">
+                <label for="complement" class="text-sm font-bold text-slate-700 ml-1">Complemento (Opcional)</label>
+                <input 
+                    type="text" 
+                    id="complement" 
+                    formControlName="complement" 
+                    class="w-full pl-4 pr-4 py-3 bg-white/50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500 transition-all text-slate-800 placeholder:text-slate-400" 
+                    placeholder="Apto, Bloco, etc.">
+            </div>
+
+            <!-- Bairro -->
+            <div class="space-y-1">
+                <label for="district" class="text-sm font-bold text-slate-700 ml-1">Bairro</label>
+                <input 
+                    type="text" 
+                    id="district" 
+                    formControlName="district" 
+                    class="w-full pl-4 pr-4 py-3 bg-white/50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500 transition-all text-slate-800 placeholder:text-slate-400" 
+                    placeholder="Nome do bairro">
+                <small *ngIf="isFieldInvalid(addressForm, 'district')" class="text-red-500 text-xs ml-1">
+                    Bairro é obrigatório
+                </small>
+            </div>
+
+            <!-- Estado e Cidade -->
+            <div class="grid grid-cols-2 gap-4">
+                <div class="space-y-1">
+                    <label for="state" class="text-sm font-bold text-slate-700 ml-1">Estado</label>
+                    <select 
+                        id="state" 
+                        formControlName="state" 
+                        (change)="onStateChange()"
+                        class="w-full pl-4 pr-4 py-3 bg-white/50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500 transition-all text-slate-800">
+                        <option value="">Selecione o estado</option>
+                        <option *ngFor="let state of states" [value]="state.code">{{ state.name }}</option>
+                    </select>
+                    <small *ngIf="isFieldInvalid(addressForm, 'state')" class="text-red-500 text-xs ml-1">
+                        Estado é obrigatório
+                    </small>
+                </div>
+                
+                <div class="space-y-1">
+                    <label for="city" class="text-sm font-bold text-slate-700 ml-1">Cidade</label>
+                    <select 
+                        id="city" 
+                        formControlName="city" 
+                        class="w-full pl-4 pr-4 py-3 bg-white/50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500 transition-all text-slate-800"
+                        [disabled]="!addressForm.get('state')?.value">
+                        <option value="">Selecione a cidade</option>
+                        <option *ngFor="let city of cities" [value]="city">{{ city }}</option>
+                    </select>
+                    <small *ngIf="isFieldInvalid(addressForm, 'city')" class="text-red-500 text-xs ml-1">
+                        Cidade é obrigatória
+                    </small>
+                </div>
+            </div>
+
+            <!-- Botões de Navegação -->
+            <div class="flex gap-4">
+                <button
+                    type="button"
+                    (click)="previousStep()"
+                    class="flex-1 py-4 bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold rounded-xl transition-all flex justify-center items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="15 18 9 12 15 6"></polyline>
+                    </svg>
+                    Voltar
+                </button>
+                <button
+                    type="button"
+                    (click)="nextStep()"
+                    class="flex-1 py-4 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl shadow-lg shadow-emerald-600/20 transition-all transform hover:-translate-y-1 flex justify-center items-center gap-2">
+                    Próximo
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="9 18 15 12 9 6"></polyline>
+                    </svg>
+                </button>
+            </div>
+        </form>
+
+        <!-- Step 3: Conta Bancária -->
+        <form *ngIf="currentStep === 3" [formGroup]="accountForm" class="space-y-4">
+            <h2 class="text-2xl font-bold text-slate-800 mb-6">Conta Bancária</h2>
+
+            <!-- Seleção de Banco -->
+            <div class="space-y-1">
+                <label for="bankCode" class="text-sm font-bold text-slate-700 ml-1">Banco</label>
+                <select 
+                    id="bankCode" 
+                    formControlName="bankCode"
+                    (change)="onBankChange()"
+                    class="w-full pl-4 pr-4 py-3 bg-white/50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500 transition-all text-slate-800">
+                    <option value="">Selecione o banco</option>
+                    <option *ngFor="let bank of banks" [value]="bank.code">{{ bank.name }} ({{ bank.code }})</option>
+                </select>
+                <input type="hidden" formControlName="bankName">
+                <small *ngIf="isFieldInvalid(accountForm, 'bankCode')" class="text-red-500 text-xs ml-1">
+                    Banco é obrigatório
+                </small>
+            </div>
+
+            <!-- Tipo de Conta -->
+            <div class="space-y-1">
+                <label for="accountType" class="text-sm font-bold text-slate-700 ml-1">Tipo de Conta</label>
+                <select 
+                    id="accountType" 
+                    formControlName="accountType" 
+                    class="w-full pl-4 pr-4 py-3 bg-white/50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500 transition-all text-slate-800">
+                    <option *ngFor="let type of accountTypes" [value]="type.value">{{ type.label }}</option>
+                </select>
+            </div>
+
+            <!-- Agência e Número da Conta -->
+            <div class="grid grid-cols-2 gap-4">
+                <div class="space-y-1">
+                    <label for="agency" class="text-sm font-bold text-slate-700 ml-1">Agência</label>
+                    <input 
+                        type="text" 
+                        id="agency" 
+                        formControlName="agency" 
+                        class="w-full pl-4 pr-4 py-3 bg-white/50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500 transition-all text-slate-800 placeholder:text-slate-400" 
+                        placeholder="0001">
+                    <small *ngIf="isFieldInvalid(accountForm, 'agency')" class="text-red-500 text-xs ml-1">
+                        Agência é obrigatória
+                    </small>
+                </div>
+                
+                <div class="space-y-1">
+                    <label for="accountNumber" class="text-sm font-bold text-slate-700 ml-1">Número da Conta</label>
+                    <input 
+                        type="text" 
+                        id="accountNumber" 
+                        formControlName="accountNumber" 
+                        class="w-full pl-4 pr-4 py-3 bg-white/50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500 transition-all text-slate-800 placeholder:text-slate-400" 
+                        placeholder="12345-6">
+                    <small *ngIf="isFieldInvalid(accountForm, 'accountNumber')" class="text-red-500 text-xs ml-1">
+                        Número da conta é obrigatório
+                    </small>
+                </div>
+            </div>
+
+            <!-- Botões de Navegação e Submissão -->
+            <div class="flex gap-4">
+                <button
+                    type="button"
+                    (click)="previousStep()"
+                    class="flex-1 py-4 bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold rounded-xl transition-all flex justify-center items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="15 18 9 12 15 6"></polyline>
+                    </svg>
+                    Voltar
+                </button>
+                <button
+                    type="button"
+                    (click)="onSubmit()"
+                    [disabled]="isLoading || accountForm.invalid"
+                    class="flex-1 py-4 bg-emerald-600 hover:bg-emerald-700 disabled:bg-emerald-400 disabled:cursor-not-allowed text-white font-bold rounded-xl shadow-lg shadow-emerald-600/20 transition-all transform hover:-translate-y-1 flex justify-center items-center gap-2">
+                    <span *ngIf="!isLoading">Finalizar Cadastro</span>
+                    <span *ngIf="isLoading">
+                        <svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                    </span>
+                </button>
+            </div>
+        </form>
+          
+        <!-- Link para Login -->
         <div class="mt-6 text-center">
            <p class="text-slate-600 text-sm">
               Já tem uma conta? 
-              <button class="text-emerald-600 font-bold hover:underline ml-1 cursor-pointer">Fazer Login</button>
+              <button (click)="goToLogin.emit()" class="text-emerald-600 font-bold hover:underline ml-1 cursor-pointer">Fazer Login</button>
            </p>
         </div>
-      </div> </main>
+      </div> 
+</main>
 </div>

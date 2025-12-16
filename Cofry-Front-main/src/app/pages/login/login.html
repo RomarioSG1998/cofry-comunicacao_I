@@ -20,13 +20,13 @@
         
         <!-- Campo Email -->
         <div class="space-y-2">
-            <label class="text-sm font-bold text-slate-700 ml-1">Email ou CPF</label>
+            <label class="text-sm font-bold text-slate-700 ml-1">Email</label>
             <div class="relative">
                 <span class="absolute left-4 top-3.5 text-slate-400 transition-colors" [class.text-emerald-500]="isFieldValid('email')">
                     <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
                 </span>
                 <input 
-                    type="text" 
+                    type="email" 
                     formControlName="email"
                     class="w-full pl-11 pr-4 py-3 bg-white/50 border rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500 transition-all text-slate-800 placeholder:text-slate-400"
                     [class.border-red-400]="isFieldInvalid('email')"
@@ -35,11 +35,6 @@
                 >
             </div>
             <div *ngIf="isFieldInvalid('email')" class="text-red-500 text-xs ml-1 font-medium">Por favor, insira um email válido.</div>
-        </div>
-        
-        <!-- Mensagem de Erro -->
-        <div *ngIf="errorMessage" class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl text-sm font-medium">
-            {{ errorMessage }}
         </div>
         
         <!-- Campo Senha -->

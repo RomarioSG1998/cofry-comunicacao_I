@@ -1,0 +1,479 @@
+package org.example.dao;
+
+import org.example.model.Transaction;
+import org.example.model.TransactionTypeEnum;
+import org.example.persistence.JdbcUtil;
+import java.math.BigDecimal;
+import java.sql.*;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+/**
+ * DAO (Data Access Object) para a entidade Transaction.
+ * Responsável por todas as operações de acesso a dados relacionadas às transações.
+ * Usa JDBC puro para conexão com o banco de dados.
+ */
+public class TransactionDAO {
+    
+    /**
+     * Mapeia um ResultSet para um objeto Transaction.
+     */
+    private Transaction mapResultSetToTransaction(ResultSet rs) throws SQLException {
+        Transaction transaction = new Transaction();
+        transaction.setTransactionId(rs.getInt("transaction_id"));
+        transaction.setSourceAccountId(rs.getInt("source_account_id"));
+        
+        int destAccountId = rs.getInt("destination_account_id");
+        if (!rs.wasNull()) {
+            transaction.setDestinationAccountId(destAccountId);
+        }
+        
+        int categoryId = rs.getInt("category_id");
+        if (!rs.wasNull()) {
+            transaction.setCategoryId(categoryId);
+        }
+        
+        BigDecimal amount = rs.getBigDecimal("amount");
+        transaction.setAmount(amount != null ? amount : BigDecimal.ZERO);
+        
+        String transactionTypeStr = rs.getString("transaction_type");
+        if (transactionTypeStr != null) {
+            transaction.setTransactionType(TransactionTypeEnum.valueOf(transactionTypeStr));
+        }
+        
+        transaction.setDescription(rs.getString("description"));
+        
+        Date transactionDate = rs.getDate("transaction_date");
+        if (transactionDate != null) {
+            transaction.setTransactionDate(transactionDate.toLocalDate());
+        }
+        
+        transaction.setIsRecurring(rs.getBoolean("is_recurring"));
+        if (rs.wasNull()) {
+            transaction.setIsRecurring(false);
+        }
+        
+        int installmentCurrent = rs.getInt("installment_current");
+        if (!rs.wasNull()) {
+            transaction.setInstallmentCurrent(installmentCurrent);
+        }
+        
+        int installmentTotal = rs.getInt("installment_total");
+        if (!rs.wasNull()) {
+            transaction.setInstallmentTotal(installmentTotal);
+        }
+        
+        Timestamp createdAt = rs.getTimestamp("created_at");
+        if (createdAt != null) {
+            transaction.setCreatedAt(createdAt.toLocalDateTime());
+        }
+        
+        return transaction;
+    }
+    
+    /**
+     * Prepara os valores padrão de uma transação antes de salvar.
+     */
+    private void prepareTransactionForSave(Transaction transaction) {
+        if (transaction.getTransactionDate() == null) {
+            transaction.setTransactionDate(LocalDate.now());
+        }
+        if (transaction.getIsRecurring() == null) {
+            transaction.setIsRecurring(false);
+        }
+        if (transaction.getCreatedAt() == null) {
+            transaction.setCreatedAt(LocalDateTime.now());
+        }
+    }
+    
+    /**
+     * Salva uma nova transação no banco de dados.
+     * 
+     * @param transaction Transação a ser salva
+     * @return Transação salva com ID gerado
+     */
+    public Transaction save(Transaction transaction) {
+        prepareTransactionForSave(transaction);
+        
+        return JdbcUtil.executeInTransaction(conn -> {
+            String sql = "INSERT INTO transactions (source_account_id, destination_account_id, category_id, " +
+                        "amount, transaction_type, description, transaction_date, is_recurring, " +
+                        "installment_current, installment_total, created_at) " +
+                        "VALUES (?, ?, ?, ?, ?::transaction_type_enum, ?, ?, ?, ?, ?, ?) RETURNING transaction_id";
+            
+            try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+                stmt.setInt(1, transaction.getSourceAccountId());
+                
+                if (transaction.getDestinationAccountId() != null) {
+                    stmt.setInt(2, transaction.getDestinationAccountId());
+                } else {
+                    stmt.setNull(2, Types.INTEGER);
+                }
+                
+                if (transaction.getCategoryId() != null) {
+                    stmt.setInt(3, transaction.getCategoryId());
+                } else {
+                    stmt.setNull(3, Types.INTEGER);
+                }
+                
+                stmt.setBigDecimal(4, transaction.getAmount());
+                stmt.setString(5, transaction.getTransactionType().toString());
+                stmt.setString(6, transaction.getDescription());
+                stmt.setDate(7, Date.valueOf(transaction.getTransactionDate()));
+                stmt.setBoolean(8, transaction.getIsRecurring());
+                
+                if (transaction.getInstallmentCurrent() != null) {
+                    stmt.setInt(9, transaction.getInstallmentCurrent());
+                } else {
+                    stmt.setNull(9, Types.INTEGER);
+                }
+                
+                if (transaction.getInstallmentTotal() != null) {
+                    stmt.setInt(10, transaction.getInstallmentTotal());
+                } else {
+                    stmt.setNull(10, Types.INTEGER);
+                }
+                
+                stmt.setTimestamp(11, Timestamp.valueOf(transaction.getCreatedAt()));
+                
+                try (ResultSet rs = stmt.executeQuery()) {
+                    if (rs.next()) {
+                        transaction.setTransactionId(rs.getInt("transaction_id"));
+                    }
+                }
+                
+                return transaction;
+            }
+        });
+    }
+    
+    /**
+     * Busca uma transação pelo ID.
+     * 
+     * @param id ID da transação
+     * @return Optional contendo a transação se encontrada
+     */
+    public Optional<Transaction> findById(Integer id) {
+        return JdbcUtil.executeWithoutTransaction(conn -> {
+            String sql = "SELECT * FROM transactions WHERE transaction_id = ?";
+            
+            try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+                stmt.setInt(1, id);
+                
+                try (ResultSet rs = stmt.executeQuery()) {
+                    if (rs.next()) {
+                        return Optional.of(mapResultSetToTransaction(rs));
+                    }
+                    return Optional.empty();
+                }
+            }
+        });
+    }
+    
+    /**
+     * Busca todas as transações.
+     * 
+     * @return Lista de todas as transações
+     */
+    public List<Transaction> findAll() {
+        return JdbcUtil.executeWithoutTransaction(conn -> {
+            String sql = "SELECT * FROM transactions ORDER BY transaction_id";
+            List<Transaction> transactions = new ArrayList<>();
+            
+            try (PreparedStatement stmt = conn.prepareStatement(sql);
+                 ResultSet rs = stmt.executeQuery()) {
+                
+                while (rs.next()) {
+                    transactions.add(mapResultSetToTransaction(rs));
+                }
+                
+                return transactions;
+            }
+        });
+    }
+    
+    /**
+     * Busca transações por conta de origem.
+     * 
+     * @param accountId ID da conta de origem
+     * @return Lista de transações da conta
+     */
+    public List<Transaction> findBySourceAccountId(Integer accountId) {
+        return JdbcUtil.executeWithoutTransaction(conn -> {
+            String sql = "SELECT * FROM transactions WHERE source_account_id = ? ORDER BY transaction_date DESC";
+            List<Transaction> transactions = new ArrayList<>();
+            
+            try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+                stmt.setInt(1, accountId);
+                
+                try (ResultSet rs = stmt.executeQuery()) {
+                    while (rs.next()) {
+                        transactions.add(mapResultSetToTransaction(rs));
+                    }
+                    return transactions;
+                }
+            }
+        });
+    }
+    
+    /**
+     * Busca transações por conta de destino.
+     * 
+     * @param accountId ID da conta de destino
+     * @return Lista de transações para a conta
+     */
+    public List<Transaction> findByDestinationAccountId(Integer accountId) {
+        return JdbcUtil.executeWithoutTransaction(conn -> {
+            String sql = "SELECT * FROM transactions WHERE destination_account_id = ? ORDER BY transaction_date DESC";
+            List<Transaction> transactions = new ArrayList<>();
+            
+            try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+                stmt.setInt(1, accountId);
+                
+                try (ResultSet rs = stmt.executeQuery()) {
+                    while (rs.next()) {
+                        transactions.add(mapResultSetToTransaction(rs));
+                    }
+                    return transactions;
+                }
+            }
+        });
+    }
+    
+    /**
+     * Busca transações por categoria.
+     * 
+     * @param categoryId ID da categoria
+     * @return Lista de transações da categoria
+     */
+    public List<Transaction> findByCategoryId(Integer categoryId) {
+        return JdbcUtil.executeWithoutTransaction(conn -> {
+            String sql = "SELECT * FROM transactions WHERE category_id = ? ORDER BY transaction_date DESC";
+            List<Transaction> transactions = new ArrayList<>();
+            
+            try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+                stmt.setInt(1, categoryId);
+                
+                try (ResultSet rs = stmt.executeQuery()) {
+                    while (rs.next()) {
+                        transactions.add(mapResultSetToTransaction(rs));
+                    }
+                    return transactions;
+                }
+            }
+        });
+    }
+    
+    /**
+     * Busca transações por tipo.
+     * 
+     * @param transactionType Tipo da transação
+     * @return Lista de transações do tipo especificado
+     */
+    public List<Transaction> findByTransactionType(TransactionTypeEnum transactionType) {
+        return JdbcUtil.executeWithoutTransaction(conn -> {
+            String sql = "SELECT * FROM transactions WHERE transaction_type = ?::transaction_type_enum ORDER BY transaction_date DESC";
+            List<Transaction> transactions = new ArrayList<>();
+            
+            try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+                stmt.setString(1, transactionType.toString());
+                
+                try (ResultSet rs = stmt.executeQuery()) {
+                    while (rs.next()) {
+                        transactions.add(mapResultSetToTransaction(rs));
+                    }
+                    return transactions;
+                }
+            }
+        });
+    }
+    
+    /**
+     * Busca transações por tipo (alias para findByTransactionType).
+     * 
+     * @param transactionType Tipo da transação
+     * @return Lista de transações do tipo especificado
+     */
+    public List<Transaction> findByType(TransactionTypeEnum transactionType) {
+        return findByTransactionType(transactionType);
+    }
+    
+    /**
+     * Busca transações recorrentes.
+     * 
+     * @return Lista de transações recorrentes
+     */
+    public List<Transaction> findRecurring() {
+        return JdbcUtil.executeWithoutTransaction(conn -> {
+            String sql = "SELECT * FROM transactions WHERE is_recurring = true ORDER BY transaction_date DESC";
+            List<Transaction> transactions = new ArrayList<>();
+            
+            try (PreparedStatement stmt = conn.prepareStatement(sql);
+                 ResultSet rs = stmt.executeQuery()) {
+                
+                while (rs.next()) {
+                    transactions.add(mapResultSetToTransaction(rs));
+                }
+                
+                return transactions;
+            }
+        });
+    }
+    
+    /**
+     * Busca transações recorrentes (alias para findRecurring).
+     * 
+     * @return Lista de transações recorrentes
+     */
+    public List<Transaction> findRecurringTransactions() {
+        return findRecurring();
+    }
+    
+    /**
+     * Busca transações por intervalo de datas.
+     * 
+     * @param startDate Data inicial
+     * @param endDate Data final
+     * @return Lista de transações no período especificado
+     */
+    public List<Transaction> findByDateRange(LocalDate startDate, LocalDate endDate) {
+        return JdbcUtil.executeWithoutTransaction(conn -> {
+            String sql = "SELECT * FROM transactions WHERE transaction_date >= ? AND transaction_date <= ? ORDER BY transaction_date DESC";
+            List<Transaction> transactions = new ArrayList<>();
+            
+            try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+                stmt.setDate(1, Date.valueOf(startDate));
+                stmt.setDate(2, Date.valueOf(endDate));
+                
+                try (ResultSet rs = stmt.executeQuery()) {
+                    while (rs.next()) {
+                        transactions.add(mapResultSetToTransaction(rs));
+                    }
+                    return transactions;
+                }
+            }
+        });
+    }
+    
+    /**
+     * Atualiza uma transação existente.
+     * 
+     * @param transaction Transação atualizada
+     * @return Transação atualizada
+     */
+    public Transaction update(Transaction transaction) {
+        return JdbcUtil.executeInTransaction(conn -> {
+            String sql = "UPDATE transactions SET source_account_id = ?, destination_account_id = ?, " +
+                        "category_id = ?, amount = ?, transaction_type = ?::transaction_type_enum, description = ?, " +
+                        "transaction_date = ?, is_recurring = ?, installment_current = ?, " +
+                        "installment_total = ? WHERE transaction_id = ?";
+            
+            try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+                stmt.setInt(1, transaction.getSourceAccountId());
+                
+                if (transaction.getDestinationAccountId() != null) {
+                    stmt.setInt(2, transaction.getDestinationAccountId());
+                } else {
+                    stmt.setNull(2, Types.INTEGER);
+                }
+                
+                if (transaction.getCategoryId() != null) {
+                    stmt.setInt(3, transaction.getCategoryId());
+                } else {
+                    stmt.setNull(3, Types.INTEGER);
+                }
+                
+                stmt.setBigDecimal(4, transaction.getAmount());
+                stmt.setString(5, transaction.getTransactionType().toString());
+                stmt.setString(6, transaction.getDescription());
+                stmt.setDate(7, Date.valueOf(transaction.getTransactionDate()));
+                stmt.setBoolean(8, transaction.getIsRecurring());
+                
+                if (transaction.getInstallmentCurrent() != null) {
+                    stmt.setInt(9, transaction.getInstallmentCurrent());
+                } else {
+                    stmt.setNull(9, Types.INTEGER);
+                }
+                
+                if (transaction.getInstallmentTotal() != null) {
+                    stmt.setInt(10, transaction.getInstallmentTotal());
+                } else {
+                    stmt.setNull(10, Types.INTEGER);
+                }
+                
+                stmt.setInt(11, transaction.getTransactionId());
+                
+                int rowsAffected = stmt.executeUpdate();
+                if (rowsAffected == 0) {
+                    throw new RuntimeException("Transação não encontrada para atualização: " + transaction.getTransactionId());
+                }
+                
+                return transaction;
+            }
+        });
+    }
+    
+    /**
+     * Remove uma transação do banco de dados.
+     * 
+     * @param id ID da transação a ser removida
+     * @return true se a transação foi removida, false se não foi encontrada
+     */
+    public boolean delete(Integer id) {
+        return JdbcUtil.executeInTransaction(conn -> {
+            String sql = "DELETE FROM transactions WHERE transaction_id = ?";
+            
+            try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+                stmt.setInt(1, id);
+                int rowsAffected = stmt.executeUpdate();
+                return rowsAffected > 0;
+            }
+        });
+    }
+    
+    /**
+     * Remove uma transação do banco de dados.
+     * 
+     * @param transaction Transação a ser removida
+     * @return true se a transação foi removida
+     */
+    public boolean delete(Transaction transaction) {
+        if (transaction != null && transaction.getTransactionId() != null) {
+            return delete(transaction.getTransactionId());
+        }
+        return false;
+    }
+    
+    /**
+     * Busca transações relacionadas a um usuário (como origem ou destino).
+     * Retorna todas as transações onde o usuário tem contas envolvidas.
+     * 
+     * @param userId ID do usuário
+     * @return Lista de transações do usuário
+     */
+    public List<Transaction> findByUserId(Integer userId) {
+        return JdbcUtil.executeWithoutTransaction(conn -> {
+            String sql = "SELECT DISTINCT t.* FROM transactions t " +
+                        "INNER JOIN accounts a1 ON t.source_account_id = a1.account_id " +
+                        "LEFT JOIN accounts a2 ON t.destination_account_id = a2.account_id " +
+                        "WHERE a1.user_id = ? OR a2.user_id = ? " +
+                        "ORDER BY t.transaction_date DESC, t.created_at DESC";
+            List<Transaction> transactions = new ArrayList<>();
+            
+            try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+                stmt.setInt(1, userId);
+                stmt.setInt(2, userId);
+                
+                try (ResultSet rs = stmt.executeQuery()) {
+                    while (rs.next()) {
+                        transactions.add(mapResultSetToTransaction(rs));
+                    }
+                    return transactions;
+                }
+            }
+        });
+    }
+}

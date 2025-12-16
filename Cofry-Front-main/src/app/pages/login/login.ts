@@ -2,8 +2,7 @@ import { Component, EventEmitter, Output, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { LoginService } from '../../services/login.service';
-import { AuthService } from '../../services/auth.service';
-import { Router } from '@angular/router';
+import { Router } from '@angular/router'; // <-- NOVO: Importa o Router
 
 @Component({
   selector: 'app-login',
@@ -19,13 +18,11 @@ export class Login {
 
   private fb = inject(FormBuilder);
   private loginService = inject(LoginService);
-  private authService = inject(AuthService);
-  private router = inject(Router);
+  private router = inject(Router); // <-- NOVO: Injeta o Router
   isLoading = false;
-  errorMessage = '';
 
   loginForm = this.fb.group({
-    email: ['', [Validators.required, Validators.email]],
+    email: ['', [Validators.required, Validators.email]], // Apenas email
     password: ['', [Validators.required, Validators.minLength(6)]]
   });
 
@@ -43,7 +40,24 @@ export class Login {
   onSubmit() {
     if (this.loginForm.valid) {
       this.isLoading = true;
-      const payload = this.loginForm.value;
+      
+      // Obtém os valores do formulário e remove espaços em branco
+      const email = (this.loginForm.get('email')?.value || '').trim();
+      const password = (this.loginForm.get('password')?.value || '').trim();
+      
+      // Valida se os campos não estão vazios
+      if (!email || !password) {
+        this.isLoading = false;
+        alert('Por favor, preencha todos os campos.');
+        return;
+      }
+      
+      const payload = {
+        email: email,
+        password: password
+      };
+
+      console.log('Enviando para API:', payload);
 
       this.loginService.login(payload).subscribe({
         
@@ -52,50 +66,17 @@ export class Login {
           console.log('Login bem-sucedido!', response);
           this.isLoading = false;
           
-          // Salvar dados do usuário usando o AuthService (notifica outros componentes)
-          if (response && response.data) {
-            const firstName = response.data.firstName || '';
-            const email = response.data.email || '';
-            const userId = response.data.userId || '';
+          // Salvar dados do usuário no localStorage
+          if (response.data) {
+            localStorage.setItem('userId', response.data.userId.toString());
+            localStorage.setItem('userEmail', response.data.email);
+            localStorage.setItem('userData', JSON.stringify(response.data));
             
-            console.log('Login - Salvando dados do usuário:', { firstName, email, userId });
-            console.log('Login - Resposta completa:', JSON.stringify(response, null, 2));
-            
-            // Salvar no AuthService (que salva no localStorage e notifica)
-            this.authService.setUserData({
-              firstName: firstName,
-              email: email,
-              userId: userId
-            });
-            
-            // Verificar se foi salvo corretamente
-            const savedName = localStorage.getItem('userName');
-            const savedEmail = localStorage.getItem('userEmail');
-            const savedUserId = localStorage.getItem('userId');
-            console.log('Login - Dados salvos no localStorage:', { 
-              userName: savedName, 
-              userEmail: savedEmail, 
-              userId: savedUserId 
-            });
-            
-            if (!savedName) {
-              console.error('ERRO: Nome não foi salvo no localStorage!');
-            }
-          } else {
-            console.error('Login - Resposta do login sem dados:', response);
+            // Dispara evento customizado para atualizar a navbar imediatamente
+            window.dispatchEvent(new Event('userLoggedIn'));
           }
           
-          // Redireciona o usuário para a rota '/nav/Home'
-          console.log('Login - Redirecionando para /nav/Home');
-          
-          // Aguardar um ciclo para garantir que o estado foi salvo
-          setTimeout(() => {
-            this.router.navigateByUrl('/nav/Home').catch((error) => {
-              console.error('Login - Erro ao navegar com Router, usando window.location:', error);
-              window.location.href = '/nav/Home';
-            });
-          }, 100);
-          
+          // Emite evento para o componente Home redirecionar
           this.loginSuccess.emit();
         },
         
@@ -104,16 +85,18 @@ export class Login {
           console.error('Erro no Login:', error);
           this.isLoading = false;
           
-          // Extrair mensagem de erro da resposta
-          if (error.error && error.error.message) {
-            this.errorMessage = error.error.message;
-          } else if (error.status === 0) {
-            this.errorMessage = 'Erro de conexão. Verifique se o servidor está rodando.';
-          } else if (error.status === 401) {
-            this.errorMessage = 'Email ou senha inválidos.';
-          } else {
-            this.errorMessage = 'Erro ao fazer login. Tente novamente.';
+          // Exibe mensagem de erro amigável
+          let errorMessage = 'Erro ao fazer login. Tente novamente.';
+          
+          if (error.error) {
+            if (error.error.error) {
+              errorMessage = error.error.error;
+            } else if (error.error.message) {
+              errorMessage = error.error.message;
+            }
           }
+          
+          alert(errorMessage);
         },
         
         // Finaliza a subscrição
@@ -124,6 +107,7 @@ export class Login {
       
     } else {
       this.loginForm.markAllAsTouched();
+      alert('Por favor, preencha todos os campos corretamente.');
     }
   }
 
@@ -132,3 +116,6 @@ export class Login {
     this.goToSignup.emit();
   }
 }
+
+
+
