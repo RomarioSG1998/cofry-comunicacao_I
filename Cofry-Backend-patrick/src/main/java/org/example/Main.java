@@ -95,6 +95,18 @@ public class Main {
             Tomcat.addServlet(context, "PixKeyServlet", new org.example.Controller.PixKeyServlet());
             context.addServletMappingDecoded("/api/pix-keys/*", "PixKeyServlet");
 
+            // Registrar servlet de investimentos
+            Tomcat.addServlet(context, "InvestimentoServlet", new org.example.Controller.InvestimentoServlet());
+            context.addServletMappingDecoded("/api/investments/*", "InvestimentoServlet");
+
+            // Registrar servlet de cartões de crédito
+            Tomcat.addServlet(context, "CartaoCreditoServlet", new org.example.Controller.CartaoCreditoServlet());
+            context.addServletMappingDecoded("/api/credit-cards/*", "CartaoCreditoServlet");
+
+            // Registrar servlet de boletos DDA
+            Tomcat.addServlet(context, "BoletoServlet", new org.example.Controller.BoletoServlet());
+            context.addServletMappingDecoded("/api/boletos/*", "BoletoServlet");
+
             // Registrar servlet de planos/assinaturas
             Tomcat.addServlet(context, "PlanServlet", new PlanServlet());
             context.addServletMappingDecoded("/api/subscription-plans/*", "PlanServlet");

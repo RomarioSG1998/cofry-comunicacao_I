@@ -1,9 +1,9 @@
-<div class="min-h-screen bg-slate-50 text-slate-900 font-sans selection:bg-emerald-500 selection:text-white pb-20">
-  
-   <!-- Navbar removed: use shared `app-navbar` component when provided -->
-   <!-- <app-navbar> will be inserted here once the shared navbar is ready -->
+<div class="min-h-screen bg-slate-50 text-slate-900 font-sans selection:bg-emerald-500 selection:text-white pb-20 relative overflow-x-hidden">
 
-   <main class="max-w-7xl mx-auto px-6 pt-8 space-y-8 animate-fade-in-up">
+  <!-- Background Mesh -->
+  <div class="absolute top-0 left-0 w-full h-[400px] bg-gradient-to-b from-slate-100 to-transparent pointer-events-none z-0"></div>
+
+  <main class="relative z-10 max-w-7xl mx-auto px-6 pt-8 space-y-8 animate-fade-in-up">
     
     <!-- Hero Section: Patrimônio -->
     <section class="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -17,26 +17,26 @@
          <div class="relative z-10 flex justify-between items-start">
             <div>
                <p class="text-slate-400 font-medium mb-1">Patrimônio Total</p>
-               <h2 class="text-4xl md:text-5xl font-bold text-white tracking-tight">R$ 124.590,00</h2>
+               <h2 class="text-4xl md:text-5xl font-bold text-white tracking-tight">{{ totalPatrimonio | currency:'BRL' }}</h2>
             </div>
             <div class="bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 px-3 py-1.5 rounded-full text-xs font-bold flex items-center gap-1">
                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg>
-               +12.5%
+               +{{ getPercent(rendaFixaTotal + acoesTotal) }}% Ativos Br
             </div>
          </div>
 
          <div class="relative z-10 grid grid-cols-3 gap-4 border-t border-white/10 pt-6">
             <div>
                <p class="text-slate-500 text-xs uppercase font-bold tracking-wider mb-1">Renda Fixa</p>
-               <p class="text-white font-semibold">R$ 80.000</p>
+               <p class="text-white font-semibold">{{ rendaFixaTotal | currency:'BRL' }}</p>
             </div>
             <div>
-               <p class="text-slate-500 text-xs uppercase font-bold tracking-wider mb-1">Ações BR</p>
-               <p class="text-white font-semibold">R$ 35.400</p>
+               <p class="text-slate-500 text-xs uppercase font-bold tracking-wider mb-1">Ações</p>
+               <p class="text-white font-semibold">{{ acoesTotal | currency:'BRL' }}</p>
             </div>
             <div>
                <p class="text-slate-500 text-xs uppercase font-bold tracking-wider mb-1">Cripto</p>
-               <p class="text-white font-semibold">R$ 9.190</p>
+               <p class="text-white font-semibold">{{ criptoTotal | currency:'BRL' }}</p>
             </div>
          </div>
       </div>
@@ -47,7 +47,7 @@
          
          <div class="flex items-center gap-8">
             <!-- Donut Chart Simulado com Conic Gradient -->
-            <div class="relative w-32 h-32 rounded-full" style="background: conic-gradient(#10b981 0% 65%, #3b82f6 65% 90%, #f59e0b 90% 100%);">
+            <div class="relative w-32 h-32 rounded-full" [style.background]="getDonutGradient()">
                <div class="absolute inset-0 m-auto w-24 h-24 bg-white rounded-full flex items-center justify-center">
                   <span class="text-xs font-bold text-slate-400">Carteira</span>
                </div>
@@ -55,70 +55,64 @@
             
             <div class="space-y-3">
                <div class="flex items-center gap-2">
-                  <div class="w-3 h-3 rounded-full bg-emerald-500"></div>
-                  <span class="text-xs font-medium text-slate-600">Renda Fixa (65%)</span>
+                  <div class="w-3 h-3 rounded-full bg-[#10b981]"></div>
+                  <span class="text-xs font-medium text-slate-600">Renda Fixa ({{ getPercent(rendaFixaTotal) }}%)</span>
                </div>
                <div class="flex items-center gap-2">
-                  <div class="w-3 h-3 rounded-full bg-blue-500"></div>
-                  <span class="text-xs font-medium text-slate-600">Ações (25%)</span>
+                  <div class="w-3 h-3 rounded-full bg-[#3b82f6]"></div>
+                  <span class="text-xs font-medium text-slate-600">Ações ({{ getPercent(acoesTotal) }}%)</span>
                </div>
                <div class="flex items-center gap-2">
-                  <div class="w-3 h-3 rounded-full bg-amber-500"></div>
-                  <span class="text-xs font-medium text-slate-600">Cripto (10%)</span>
+                  <div class="w-3 h-3 rounded-full bg-[#f59e0b]"></div>
+                  <span class="text-xs font-medium text-slate-600">Cripto ({{ getPercent(criptoTotal) }}%)</span>
                </div>
             </div>
          </div>
       </div>
     </section>
 
-    <!-- Lista de Ativos e Oportunidades -->
+    <!-- Lista de Ativos e Ações -->
     <section>
       <div class="flex items-center justify-between mb-6">
-         <h2 class="text-xl font-bold text-slate-800">Meus Ativos & Oportunidades</h2>
-         <div class="flex gap-2">
-            <button class="px-4 py-2 text-xs font-bold text-white bg-slate-900 rounded-xl">Todos</button>
-            <button class="px-4 py-2 text-xs font-bold text-slate-500 hover:bg-slate-100 rounded-xl transition-colors">Ações</button>
-            <button class="px-4 py-2 text-xs font-bold text-slate-500 hover:bg-slate-100 rounded-xl transition-colors">FIIs</button>
-            <button class="px-4 py-2 text-xs font-bold text-slate-500 hover:bg-slate-100 rounded-xl transition-colors">Cripto</button>
-         </div>
+         <h2 class="text-xl font-bold text-slate-800">Meus Investimentos</h2>
+         <button (click)="openAddForm()" class="px-4 py-2 text-xs font-bold text-white bg-slate-900 rounded-xl hover:bg-slate-800 transition-colors flex items-center gap-1.5">
+           <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+           Adicionar Ativo
+         </button>
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
          
-         <!-- Asset Card 1: PETR4 -->
-         <div class="bg-white p-5 rounded-3xl border border-slate-100 shadow-sm hover:shadow-md hover:-translate-y-1 transition-all cursor-pointer group">
+         <div *ngFor="let inv of investments" class="bg-white p-5 rounded-3xl border border-slate-100 shadow-sm hover:shadow-md transition-all cursor-pointer relative group">
             <div class="flex justify-between items-start mb-4">
-               <div class="w-10 h-10 bg-yellow-100 rounded-xl flex items-center justify-center text-yellow-700 font-bold text-xs">PETR4</div>
-               <span class="text-xs font-bold text-emerald-600 bg-emerald-50 px-2 py-1 rounded-lg">+2.4%</span>
-            </div>
-            <p class="text-slate-400 text-xs font-medium">Petrobras PN</p>
-            <h4 class="text-lg font-bold text-slate-900 mt-1">R$ 34,50</h4>
-         </div>
-
-         <!-- Asset Card 2: AAPL -->
-         <div class="bg-white p-5 rounded-3xl border border-slate-100 shadow-sm hover:shadow-md hover:-translate-y-1 transition-all cursor-pointer group">
-            <div class="flex justify-between items-start mb-4">
-               <div class="w-10 h-10 bg-slate-100 rounded-xl flex items-center justify-center text-slate-700 font-bold text-xs">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.21-1.98 1.08-3.11-1.06.05-2.31.71-3.06 1.48-.69.7-1.24 1.85-1.09 2.98 1.16.09 2.38-.5 3.07-1.35z"/></svg>
+               <div class="w-10 h-10 rounded-xl flex items-center justify-center font-bold text-xs" 
+                    [ngClass]="{
+                      'bg-emerald-50 text-emerald-700': inv.tipoAtivo === 'Renda Fixa',
+                      'bg-blue-50 text-blue-700': inv.tipoAtivo === 'Ações',
+                      'bg-amber-50 text-amber-700': inv.tipoAtivo === 'Cripto',
+                      'bg-slate-50 text-slate-700': inv.tipoAtivo !== 'Renda Fixa' && inv.tipoAtivo !== 'Ações' && inv.tipoAtivo !== 'Cripto'
+                    }">
+                 {{ inv.tipoAtivo.substring(0, 4).toUpperCase() }}
                </div>
-               <span class="text-xs font-bold text-emerald-600 bg-emerald-50 px-2 py-1 rounded-lg">+0.8%</span>
+               
+               <div class="flex gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity">
+                 <button (click)="openEditForm(inv); $event.stopPropagation()" class="p-1.5 bg-slate-50 hover:bg-emerald-50 text-slate-500 hover:text-emerald-600 rounded-lg transition-colors">
+                   <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path></svg>
+                 </button>
+                 <button (click)="deleteInvestment(inv.idInvest!); $event.stopPropagation()" class="p-1.5 bg-slate-50 hover:bg-red-50 text-slate-500 hover:text-red-600 rounded-lg transition-colors">
+                   <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                 </button>
+               </div>
             </div>
-            <p class="text-slate-400 text-xs font-medium">Apple Inc.</p>
-            <h4 class="text-lg font-bold text-slate-900 mt-1">R$ 890,20</h4>
+            <p class="text-slate-400 text-xs font-medium">{{ inv.tipoAtivo }}</p>
+            <h4 class="text-lg font-bold text-slate-900 mt-1">{{ inv.valorAplicado | currency:'BRL' }}</h4>
+            <div *ngIf="inv.roiAtual" class="mt-2 text-xs font-bold text-emerald-600 flex items-center gap-1">
+               ROI: +{{ inv.roiAtual }}%
+            </div>
          </div>
 
-         <!-- Asset Card 3: BTC -->
-         <div class="bg-white p-5 rounded-3xl border border-slate-100 shadow-sm hover:shadow-md hover:-translate-y-1 transition-all cursor-pointer group">
-            <div class="flex justify-between items-start mb-4">
-               <div class="w-10 h-10 bg-orange-100 rounded-xl flex items-center justify-center text-orange-600 font-bold text-xs">BTC</div>
-               <span class="text-xs font-bold text-red-500 bg-red-50 px-2 py-1 rounded-lg">-1.2%</span>
-            </div>
-            <p class="text-slate-400 text-xs font-medium">Bitcoin</p>
-            <h4 class="text-lg font-bold text-slate-900 mt-1">R$ 345k</h4>
-         </div>
-
-         <!-- Asset Card 4: New Opportunity -->
-         <div class="bg-slate-50 border-2 border-dashed border-slate-200 p-5 rounded-3xl flex flex-col items-center justify-center text-center hover:border-emerald-300 hover:bg-emerald-50/30 transition-all cursor-pointer group">
+         <!-- Novo Aporte Card -->
+         <div (click)="openAddForm()" class="bg-slate-50 border-2 border-dashed border-slate-200 p-5 rounded-3xl flex flex-col items-center justify-center text-center hover:border-emerald-300 hover:bg-emerald-50/30 transition-all cursor-pointer group min-h-[148px]">
             <div class="w-10 h-10 bg-white rounded-full shadow-sm flex items-center justify-center mb-2 group-hover:scale-110 transition-transform">
                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-emerald-600"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
             </div>
@@ -128,39 +122,70 @@
       </div>
     </section>
 
-    <!-- Histórico Recente -->
-    <section>
-       <h2 class="text-lg font-bold text-slate-800 mb-4">Histórico de Ordens</h2>
-       <div class="bg-white rounded-3xl border border-slate-100 shadow-sm overflow-hidden">
-          <table class="w-full text-left text-sm text-slate-600">
-             <thead class="bg-slate-50 border-b border-slate-100 text-xs uppercase text-slate-400 font-bold">
-                <tr>
-                   <th class="px-6 py-4">Ativo</th>
-                   <th class="px-6 py-4">Tipo</th>
-                   <th class="px-6 py-4">Data</th>
-                   <th class="px-6 py-4 text-right">Valor</th>
-                   <th class="px-6 py-4 text-right">Status</th>
-                </tr>
-             </thead>
-             <tbody class="divide-y divide-slate-50">
-                <tr class="hover:bg-slate-50/50 transition-colors">
-                   <td class="px-6 py-4 font-bold text-slate-800">PETR4</td>
-                   <td class="px-6 py-4"><span class="text-emerald-600 bg-emerald-50 px-2 py-1 rounded text-xs font-bold">Compra</span></td>
-                   <td class="px-6 py-4">10 Out 2025</td>
-                   <td class="px-6 py-4 text-right font-medium">R$ 1.200,00</td>
-                   <td class="px-6 py-4 text-right"><span class="w-2 h-2 rounded-full bg-emerald-500 inline-block mr-1"></span> Executada</td>
-                </tr>
-                <tr class="hover:bg-slate-50/50 transition-colors">
-                   <td class="px-6 py-4 font-bold text-slate-800">BTC</td>
-                   <td class="px-6 py-4"><span class="text-red-500 bg-red-50 px-2 py-1 rounded text-xs font-bold">Venda</span></td>
-                   <td class="px-6 py-4">08 Out 2025</td>
-                   <td class="px-6 py-4 text-right font-medium">R$ 500,00</td>
-                   <td class="px-6 py-4 text-right"><span class="w-2 h-2 rounded-full bg-emerald-500 inline-block mr-1"></span> Executada</td>
-                </tr>
-             </tbody>
-          </table>
-       </div>
-    </section>
+    <!-- Modal Form -->
+    <div *ngIf="showForm" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+      <div class="bg-white rounded-3xl w-full max-w-md p-8 border border-slate-100 shadow-2xl relative animate-fade-in-up">
+        
+        <button (click)="closeForm()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
 
+        <h3 class="text-xl font-bold text-slate-900 mb-6">{{ isEdit ? 'Editar Investimento' : 'Novo Investimento' }}</h3>
+
+        <form (submit)="onSubmit($event)" class="space-y-4">
+          <div>
+            <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Tipo de Ativo</label>
+            <select 
+              [(ngModel)]="investmentForm.tipoAtivo"
+              name="tipoAtivo"
+              required
+              class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all outline-none cursor-pointer"
+            >
+              <option value="Renda Fixa">Renda Fixa (CDB, Tesouro)</option>
+              <option value="Ações">Ações (Bolsa de Valores)</option>
+              <option value="Cripto">Criptomoedas (BTC, ETH)</option>
+              <option value="Outros">Outros Ativos</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Valor Aplicado</label>
+            <input 
+              type="number"
+              [(ngModel)]="investmentForm.valorAplicado"
+              name="valorAplicado"
+              required
+              min="0.01"
+              step="0.01"
+              placeholder="R$ 0,00"
+              class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all outline-none"
+            >
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Retorno Projetado / ROI (%)</label>
+            <input 
+              type="number"
+              [(ngModel)]="investmentForm.roiAtual"
+              name="roiAtual"
+              min="0"
+              step="0.1"
+              placeholder="Ex: 12.5"
+              class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all outline-none"
+            >
+          </div>
+
+          <div class="flex gap-3 mt-6">
+            <button type="button" (click)="closeForm()" class="flex-1 py-3 border border-slate-200 rounded-xl font-bold text-slate-500 hover:bg-slate-50 transition-all">
+              Cancelar
+            </button>
+            <button type="submit" class="flex-1 py-3 bg-[#00A868] hover:bg-[#008f58] text-white font-bold rounded-xl transition-all shadow-lg shadow-emerald-250">
+              Confirmar
+            </button>
+          </div>
+        </form>
+
+      </div>
+    </div>
   </main>
 </div>
