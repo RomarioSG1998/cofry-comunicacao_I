@@ -17,10 +17,9 @@ INSERT INTO categoria (nome, tipo, icone) VALUES
 ('Investimentos', 'receita', 'chart-line'),
 ('Moradia', 'despesa', 'home');
 
--- Seed de Usuários de Teste (Senha: '123456' em hash BCrypt)
+-- Seed de Usuário de Teste Único (Senha: '123456' em hash BCrypt)
 INSERT INTO usuario (nome, email, senha_hash, tipo_usuario) VALUES 
-('Romário Jala', 'romario@cofry.com', '$2a$10$tM6n.iZ1bU1h6gA33mO52OxzI5jZ7a2xL09hQ4xKjW2/ZtJ6/3H6O', 'usuario'),
-('Admin Cofry', 'admin@cofry.com', '$2a$10$tM6n.iZ1bU1h6gA33mO52OxzI5jZ7a2xL09hQ4xKjW2/ZtJ6/3H6O', 'admin');
+('Romário Jala', 'romario@cofry.com', '$2a$10$tM6n.iZ1bU1h6gA33mO52OxzI5jZ7a2xL09hQ4xKjW2/ZtJ6/3H6O', 'usuario');
 
 -- Seed de Contas para o Usuário de Teste (id_usuario = 1)
 INSERT INTO conta (id_usuario, saldo, instituicao) VALUES 
@@ -109,7 +108,7 @@ INSERT INTO meta_poupanca (id_usuario, valor_alvo, valor_atual, data_limite) VAL
 (1, 15000.00, 3200.00, '2026-11-30'),  -- Viagem de Férias
 (1, 8000.00, 0.00, '2027-06-30');      -- Trocar de Computador
 
--- Seed de Logs de Auditoria (id_admin = 2 referenciando o usuário administrador)
+-- Seed de Logs de Auditoria (id_admin = 1 referenciando o usuário único Romário)
 INSERT INTO log_auditoria (id_admin, acao, data_hora) VALUES
-(2, 'Criação de novos planos do Cofry', '2026-06-01'),
-(2, 'Homologação do ambiente de testes do usuário Romário', '2026-06-02');
+(1, 'Criação de novos planos do Cofry', '2026-06-01'),
+(1, 'Homologação do ambiente de testes do usuário Romário', '2026-06-02');
