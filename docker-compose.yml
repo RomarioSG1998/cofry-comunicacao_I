@@ -1,0 +1,50 @@
+version: '3.8'
+
+services:
+  cofry-db:
+    image: postgres:15-alpine
+    container_name: cofry-db
+    restart: always
+    environment:
+      POSTGRES_DB: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: jala.0725
+    ports:
+      - "5433:5432"
+    volumes:
+      - cofry-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  cofry-backend:
+    build:
+      context: ./Cofry-Backend-patrick
+      dockerfile: Dockerfile
+    container_name: cofry-backend
+    restart: always
+    ports:
+      - "8082:8082"
+    environment:
+      DB_URL: jdbc:postgresql://cofry-db:5432/postgres
+      DB_USER: postgres
+      DB_PASS: jala.0725
+    depends_on:
+      cofry-db:
+        condition: service_healthy
+
+  cofry-frontend:
+    build:
+      context: ./Cofry-Front-main
+      dockerfile: Dockerfile
+    container_name: cofry-frontend
+    restart: always
+    ports:
+      - "4000:4000"
+    depends_on:
+      - cofry-backend
+
+volumes:
+  cofry-db-data:

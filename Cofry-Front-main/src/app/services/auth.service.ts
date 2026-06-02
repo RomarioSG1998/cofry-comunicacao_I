@@ -48,7 +48,7 @@ export class AuthService {
     return localStorage.getItem('userName') || '';
   }
 
-  setUserData(userData: { firstName?: string; email?: string; userId?: number | string }): void {
+  setUserData(userData: { firstName?: string; email?: string; userId?: number | string; token?: string }): void {
     if (!isPlatformBrowser(this.platformId)) {
       return;
     }
@@ -68,6 +68,10 @@ export class AuthService {
     if (userData.userId) {
       localStorage.setItem('userId', userData.userId.toString());
     }
+
+    if (userData.token) {
+      localStorage.setItem('token', userData.token);
+    }
   }
 
   clearUserData(): void {
@@ -77,6 +81,7 @@ export class AuthService {
     localStorage.removeItem('userName');
     localStorage.removeItem('userEmail');
     localStorage.removeItem('userId');
+    localStorage.removeItem('token');
     this.userNameSubject.next('');
   }
 }

@@ -7,6 +7,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.example.DAO.UserDAO;
 import org.example.Model.Usuario;
 import com.google.gson.Gson;
+import org.mindrot.jbcrypt.BCrypt;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -68,7 +69,9 @@ public class RegisterServlet extends HttpServlet {
             Usuario novoUsuario = new Usuario();
             novoUsuario.setName(fullName);
             novoUsuario.setEmail(email);
-            novoUsuario.setPassword(password); // Em produção, criptografar com BCrypt
+            // Criptografar a senha com BCrypt para segurança
+            String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt());
+            novoUsuario.setPassword(hashedPassword);
             novoUsuario.setTipoUser("CLIENTE"); // Valor padrão
 
             // Salvar no banco
@@ -79,9 +82,11 @@ public class RegisterServlet extends HttpServlet {
 
             Map<String, Object> userData = new HashMap<>();
             if (usuarioCriado != null) {
+                String token = org.example.Security.JwtUtil.gerarToken(usuarioCriado.getIdUsuario(), usuarioCriado.getEmail());
                 userData.put("userId", usuarioCriado.getIdUsuario());
                 userData.put("firstName", usuarioCriado.getName());
                 userData.put("email", usuarioCriado.getEmail());
+                userData.put("token", token);
             }
 
             Map<String, Object> response = new HashMap<>();

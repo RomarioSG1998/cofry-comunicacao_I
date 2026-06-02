@@ -13,6 +13,7 @@ import { Transferir } from './pages/transferir/transferir';
 import { Extrato } from './pages/extrato/extrato';
 import { MainLayout } from './shared/layout/main-layout';
 import { TransactionListComponent } from './pages/transaction-list/transaction-list.component';
+import { PixKeysComponent } from './pages/pix-keys/pix-keys.component';
 
 
 
@@ -41,7 +42,9 @@ export const routes: Routes = [
             { path: 'Pix', component: Pix },
             { path: 'Pagar', component: Pagar },
             { path: 'Transferir', component: Transferir },
-            { path: 'Extrato', component: Extrato }
+            { path: 'Extrato', component: TransactionListComponent },
+            { path: 'Minhas-Chaves', component: PixKeysComponent },
+            { path: 'minhas-chaves', component: PixKeysComponent }
         ]
     },
     

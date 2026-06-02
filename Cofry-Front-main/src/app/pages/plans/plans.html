@@ -31,7 +31,9 @@
           <span class="text-4xl font-bold text-slate-900">R$ 0</span>
           <span class="text-slate-400">/mês</span>
         </div>
-        <button class="w-full py-3 px-4 border border-slate-200 text-slate-700 font-bold rounded-xl hover:bg-slate-50 transition-colors mb-8">Plano Atual</button>
+        <button [class.bg-emerald-600]="isCurrentPlan('1')" [class.text-white]="isCurrentPlan('1')" class="w-full py-3 px-4 border border-slate-200 text-slate-700 font-bold rounded-xl hover:bg-slate-50 transition-colors mb-8">
+          {{ isCurrentPlan('1') ? 'Plano Atual' : 'Selecionar Plano' }}
+        </button>
         
         <ul class="space-y-4 text-sm text-slate-600">
           <li class="flex items-center gap-3">
@@ -63,7 +65,9 @@
           <span class="text-4xl font-bold text-slate-900">R$ 19,90</span>
           <span class="text-slate-400">/mês</span>
         </div>
-        <button class="w-full py-3 px-4 bg-emerald-600 text-white font-bold rounded-xl hover:bg-emerald-700 shadow-lg shadow-emerald-500/30 transition-all mb-8">Assinar Pro</button>
+        <button class="w-full py-3 px-4 bg-emerald-600 text-white font-bold rounded-xl hover:bg-emerald-700 shadow-lg shadow-emerald-500/30 transition-all mb-8">
+          {{ isCurrentPlan('2') ? 'Plano Atual' : 'Assinar Pro' }}
+        </button>
         
         <ul class="space-y-4 text-sm text-slate-600">
           <li class="flex items-center gap-3">
@@ -100,7 +104,9 @@
           <span class="text-4xl font-bold text-white">R$ 49,90</span>
           <span class="text-slate-500">/mês</span>
         </div>
-        <button class="w-full py-3 px-4 bg-white/10 text-white border border-white/10 font-bold rounded-xl hover:bg-white hover:text-slate-900 transition-all mb-8 relative z-10 backdrop-blur-sm">Ser Black</button>
+        <button class="w-full py-3 px-4 bg-white/10 text-white border border-white/10 font-bold rounded-xl hover:bg-white hover:text-slate-900 transition-all mb-8 relative z-10 backdrop-blur-sm">
+          {{ isCurrentPlan('3') ? 'Plano Atual' : 'Ser Black' }}
+        </button>
         
         <ul class="space-y-4 text-sm text-slate-300 relative z-10">
           <li class="flex items-center gap-3">

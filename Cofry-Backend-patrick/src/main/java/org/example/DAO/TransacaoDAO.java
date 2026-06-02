@@ -201,7 +201,7 @@ public class TransacaoDAO {
     }
 
     public List<Transacao> buscarPorUsuario(Integer idUsuario) {
-        String sql = "SELECT * FROM transacao WHERE id_usuario = ?";
+        String sql = "SELECT * FROM transacao WHERE id_usuario = ? ORDER BY data DESC, id_trans DESC";
         List<Transacao> transacoes = new ArrayList<>();
 
         try (Connection conn = ConnectionFactory.getConnection();
@@ -242,6 +242,55 @@ public class TransacaoDAO {
 
         } catch (SQLException e) {
             System.out.println("Erro ao buscar transações por usuário: " + e.getMessage());
+        }
+
+        return transacoes;
+    }
+
+    public List<Transacao> buscarPorUsuarioPaginado(Integer idUsuario, int limit, int offset) {
+        String sql = "SELECT * FROM transacao WHERE id_usuario = ? ORDER BY data DESC, id_trans DESC LIMIT ? OFFSET ?";
+        List<Transacao> transacoes = new ArrayList<>();
+
+        try (Connection conn = ConnectionFactory.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, idUsuario);
+            stmt.setInt(2, limit);
+            stmt.setInt(3, offset);
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                Transacao transacao = new Transacao();
+                transacao.setIdTrans(rs.getInt("id_trans"));
+                transacao.setIdUsuario(rs.getInt("id_usuario"));
+                if (rs.getBigDecimal("valor") != null) {
+                    transacao.setValor(rs.getBigDecimal("valor"));
+                }
+                if (rs.getDate("data") != null) {
+                    transacao.setData(rs.getDate("data").toLocalDate());
+                }
+                if (rs.getString("comprovante_url") != null) {
+                    transacao.setComprovanteUrl(rs.getString("comprovante_url"));
+                }
+                
+                int categoriaId = rs.getInt("id_categoria");
+                if (!rs.wasNull()) {
+                    transacao.setIdCategoria(categoriaId);
+                }
+                
+                int contaId = rs.getInt("id_conta");
+                if (!rs.wasNull()) {
+                    transacao.setIdConta(contaId);
+                }
+                
+                int cartaoId = rs.getInt("id_cartao");
+                if (!rs.wasNull()) {
+                    transacao.setIdCartao(cartaoId);
+                }
+                transacoes.add(transacao);
+            }
+
+        } catch (SQLException e) {
+            System.out.println("Erro ao buscar transações paginadas por usuário: " + e.getMessage());
         }
 
         return transacoes;

@@ -7,6 +7,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.example.DAO.UserDAO;
 import org.example.Model.Usuario;
 import com.google.gson.Gson;
+import org.mindrot.jbcrypt.BCrypt;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -61,8 +62,16 @@ public class LoginServlet extends HttpServlet {
                 return;
             }
 
-            // Verificar senha (comparação simples - em produção usar BCrypt)
-            if (!usuario.getPassword().equals(password)) {
+            // Verificar senha (BCrypt com fallback para texto plano para compatibilidade com usuários existentes)
+            boolean passwordMatches = false;
+            try {
+                passwordMatches = BCrypt.checkpw(password, usuario.getPassword());
+            } catch (Exception e) {
+                // Caso a senha salva não seja um hash BCrypt válido, faz a comparação em texto plano
+                passwordMatches = usuario.getPassword().equals(password);
+            }
+
+            if (!passwordMatches) {
                 resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                 PrintWriter out = resp.getWriter();
                 Map<String, String> errorResponse = new HashMap<>();
@@ -73,10 +82,14 @@ public class LoginServlet extends HttpServlet {
             }
 
             // Login bem-sucedido
+            // Gerar token JWT
+            String token = org.example.Security.JwtUtil.gerarToken(usuario.getIdUsuario(), usuario.getEmail());
+
             Map<String, Object> userData = new HashMap<>();
             userData.put("userId", usuario.getIdUsuario());
             userData.put("firstName", usuario.getName());
             userData.put("email", usuario.getEmail());
+            userData.put("token", token);
 
             Map<String, Object> response = new HashMap<>();
             response.put("status", "sucesso");

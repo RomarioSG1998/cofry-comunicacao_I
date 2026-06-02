@@ -57,15 +57,17 @@ export class Login {
             const firstName = response.data.firstName || '';
             const email = response.data.email || '';
             const userId = response.data.userId || '';
+            const token = response.data.token || '';
             
-            console.log('Login - Salvando dados do usuário:', { firstName, email, userId });
+            console.log('Login - Salvando dados do usuário:', { firstName, email, userId, token });
             console.log('Login - Resposta completa:', JSON.stringify(response, null, 2));
             
             // Salvar no AuthService (que salva no localStorage e notifica)
             this.authService.setUserData({
               firstName: firstName,
               email: email,
-              userId: userId
+              userId: userId,
+              token: token
             });
             
             // Verificar se foi salvo corretamente

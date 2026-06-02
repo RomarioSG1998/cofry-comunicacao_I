@@ -124,28 +124,27 @@ export class Navbar implements OnInit, OnDestroy {
             this.userName.set(userName.trim());
             this.userEmail = email;
             this.userInitials = this.computeInitials(userName) || 'CO';
-            this.userPlanName.set(this.getPlanNameLocally(1)); // Usa plano padrão
+            
+            // Buscar o plano ativo do usuário dinamicamente
+            const userId = this.authService.getUserId();
+            if (userId) {
+                this.planService.getUserPlanById(userId).subscribe({
+                    next: (res) => {
+                        if (res && res.plan) {
+                            const name = res.plan.name;
+                            this.userPlanName.set(name);
+                            localStorage.setItem('userPlan', name);
+                        }
+                    },
+                    error: (err) => console.error('Navbar - Erro ao buscar plano do usuário:', err)
+                });
+            } else {
+                this.userPlanName.set('Cofry Start');
+            }
             console.log('Navbar - Nome do usuário carregado e aplicado:', this.userName());
         } else {
-            // Se não tem nome, mantém o padrão "Usuário"
-            // O nome será atualizado quando o login acontecer através do subscription
             console.log('Navbar - Nome do usuário não encontrado, usando padrão');
         }
-    }
-
-    /**
-     * Mapeamento LOCAL paliativo para evitar o erro do PlanService.
-     * REMOVA esta função e a lógica do PlanService assim que o backend for corrigido.
-     */
-     private getPlanNameLocally(planId: number): string {
-        const plansMap: { [key: number]: string } = {
-            1: 'Cofry Start',
-            2: 'Cofry Basic',
-            3: 'Premium Member',
-            4: 'Cofry Invest Plus',
-            5: 'Cofry Max'
-        };
-        return plansMap[planId] || 'Plano';
     }
 
     /**

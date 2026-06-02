@@ -6,9 +6,9 @@ import java.sql.SQLException;
 
 public class ConnectionFactory {
 
-    private static final String URL = "jdbc:postgresql://cofry-db.cc5w4muoa5ca.us-east-1.rds.amazonaws.com:5432/postgres";
-    private static final String USER = "postgres";
-    private static final String PASS = "jala.0725";
+    private static final String URL = System.getenv("DB_URL") != null ? System.getenv("DB_URL") : "jdbc:postgresql://cofry-db.cc5w4muoa5ca.us-east-1.rds.amazonaws.com:5432/postgres";
+    private static final String USER = System.getenv("DB_USER") != null ? System.getenv("DB_USER") : "postgres";
+    private static final String PASS = System.getenv("DB_PASS") != null ? System.getenv("DB_PASS") : "jala.0725";
 
     public static Connection getConnection() {
         try {
@@ -19,19 +19,15 @@ public class ConnectionFactory {
         }
     }
 
-    public static void main(String[] args) {
+    public static String getURL() {
+        return URL;
+    }
 
-        Connection conn = getConnection();  // apenas UMA chamada
+    public static String getUSER() {
+        return USER;
+    }
 
-        if (conn != null) {
-            System.out.println("Conectado com sucesso!");
-            try {
-                conn.close();
-            } catch (SQLException e) {
-                System.out.println("Erro ao fechar conexão: " + e.getMessage());
-            }
-        } else {
-            System.out.println("Falha na conexão.");
-        }
+    public static String getPASS() {
+        return PASS;
     }
 }

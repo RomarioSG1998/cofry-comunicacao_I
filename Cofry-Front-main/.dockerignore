@@ -1,0 +1,7 @@
+node_modules
+dist
+.git
+.lh
+.editorconfig
+*.bat
+*.ps1

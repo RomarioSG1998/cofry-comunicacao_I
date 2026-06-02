@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Transaction } from '../../models/transaction.model';
 
@@ -10,6 +10,12 @@ import { Transaction } from '../../models/transaction.model';
 })
 export class TransactionCardComponent {
   @Input() transaction!: Transaction;
+  @Output() delete = new EventEmitter<number>();
+
+  onDelete(event: Event) {
+    event.stopPropagation();
+    this.delete.emit(this.transaction.id);
+  }
 
   getIconConfig() {
     // PIX

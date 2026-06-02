@@ -35,7 +35,27 @@ export class SignUp {
     });
   }
 
-  // Validador personalizado para checar se senhas batem
+  formatCPF(event: any) {
+    const input = event.target.value;
+    let clean = input.replace(/\D/g, '');
+    if (clean.length > 11) {
+      clean = clean.substring(0, 11);
+    }
+    
+    let formatted = '';
+    if (clean.length > 9) {
+      formatted = `${clean.substring(0, 3)}.${clean.substring(3, 6)}.${clean.substring(6, 9)}-${clean.substring(9)}`;
+    } else if (clean.length > 6) {
+      formatted = `${clean.substring(0, 3)}.${clean.substring(3, 6)}.${clean.substring(6)}`;
+    } else if (clean.length > 3) {
+      formatted = `${clean.substring(0, 3)}.${clean.substring(3)}`;
+    } else {
+      formatted = clean;
+    }
+    
+    this.signupForm.patchValue({ cpf: formatted });
+  }
+
   onSubmit() {
     // 1. Verifica se o form está válido visualmente
     /*
@@ -64,7 +84,8 @@ export class SignUp {
           this.authService.setUserData({
             firstName: res.data.firstName,
             email: res.data.email,
-            userId: res.data.userId
+            userId: res.data.userId,
+            token: res.data.token
           });
         }
         alert('Conta criada com sucesso!');

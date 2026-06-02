@@ -1,12 +1,18 @@
 <section class="min-h-screen bg-gray-50 p-6">
   <!-- Título -->
-  <header class="mb-6">
-    <h1 class="text-2xl font-bold text-gray-800">
-      Extrato
-    </h1>
-    <p class="text-sm text-gray-500">
-      Histórico de movimentações
-    </p>
+  <header class="mb-6 flex justify-between items-center">
+    <div>
+      <h1 class="text-2xl font-bold text-gray-800">
+        Extrato
+      </h1>
+      <p class="text-sm text-gray-500">
+        Histórico de movimentações
+      </p>
+    </div>
+    <button (click)="openModal()" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl shadow-md transition-all flex items-center gap-2">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+      Nova Transação
+    </button>
   </header>
 
   <!-- Lista de Transações -->
@@ -14,8 +20,16 @@
     <app-transaction-card
       *ngFor="let transaction of transactions"
       [transaction]="transaction"
+      (delete)="deleteTransaction($event)"
     >
     </app-transaction-card>
+  </div>
+
+  <!-- Botão Carregar Mais -->
+  <div *ngIf="hasMore && transactions.length > 0" class="flex justify-center mt-6">
+    <button (click)="loadMore()" class="px-6 py-2.5 bg-white hover:bg-emerald-50 text-emerald-600 hover:text-emerald-700 font-bold rounded-xl border border-slate-200 hover:border-emerald-200 shadow-sm transition-all active:scale-95">
+      Carregar mais
+    </button>
   </div>
 
   <!-- Estado vazio -->
@@ -25,5 +39,47 @@
   >
     <i class="ri-inbox-line text-5xl mb-4"></i>
     <span>Nenhuma transação encontrada</span>
+  </div>
+
+  <!-- Modal Nova Transação -->
+  <div *ngIf="showModal" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm flex items-center justify-center z-50 animate-fade-in">
+    <div class="bg-white rounded-3xl p-8 max-w-md w-full border border-slate-100 shadow-2xl relative">
+      <!-- Fechar -->
+      <button (click)="closeModal()" class="absolute top-6 right-6 text-slate-400 hover:text-slate-600 transition-colors">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+      </button>
+
+      <h3 class="text-xl font-bold text-slate-800 mb-6">Nova Transação</h3>
+
+      <form (submit)="saveTransaction($event)" class="space-y-4">
+        <div>
+          <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Valor (R$)</label>
+          <input type="number" step="0.01" [(ngModel)]="newTx.valor" name="valor" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all">
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Data</label>
+          <input type="date" [(ngModel)]="newTx.data" name="data" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all">
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Categoria</label>
+          <select [(ngModel)]="newTx.idCategoria" name="idCategoria" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all cursor-pointer">
+            <option *ngFor="let cat of categories" [value]="cat.idCategoria">{{ cat.nome }} ({{ cat.tipo }})</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Conta Origem</label>
+          <select [(ngModel)]="newTx.idConta" name="idConta" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all cursor-pointer">
+            <option *ngFor="let acc of accounts" [value]="acc.idConta">{{ acc.instituicao }} - Saldo: {{ acc.saldo | currency:'BRL' }}</option>
+          </select>
+        </div>
+
+        <button type="submit" class="w-full py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl shadow-lg shadow-emerald-500/20 transition-all mt-4">
+          Salvar Transação
+        </button>
+      </form>
+    </div>
   </div>
 </section>

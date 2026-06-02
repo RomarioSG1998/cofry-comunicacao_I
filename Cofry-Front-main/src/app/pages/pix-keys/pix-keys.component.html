@@ -1,0 +1,127 @@
+<div class="min-h-screen bg-[#F0F4F8] font-sans text-slate-900 pb-20 relative overflow-x-hidden">
+  
+  <!-- Background Gradient Mesh -->
+  <div class="absolute top-0 left-0 w-full h-[500px] bg-gradient-to-b from-emerald-50/80 to-transparent pointer-events-none z-0"></div>
+  <div class="absolute -top-20 -left-20 w-96 h-96 bg-emerald-200/20 rounded-full blur-3xl pointer-events-none z-0"></div>
+
+  <main class="relative z-10 p-6 max-w-5xl mx-auto space-y-8 mt-4">
+    
+    <!-- Back Button -->
+    <div class="flex items-center mb-4 pl-2">
+      <button (click)="goBack()" class="flex items-center gap-2 text-slate-500 hover:text-emerald-600 transition-colors group">
+        <div class="p-2 rounded-full bg-white group-hover:bg-white/80 shadow-sm border border-slate-100 transition-all">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+        </div>
+        <span class="text-sm font-bold text-slate-600 group-hover:text-emerald-700">Voltar para Pix</span>
+      </button>
+    </div>
+
+    <!-- Header Section -->
+    <div class="bg-white rounded-[2rem] p-8 shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-50">
+      <h2 class="text-3xl font-extrabold text-slate-900">Gerenciador de Chaves Pix</h2>
+      <p class="text-sm text-slate-500 mt-1">Cadastre e gerencie as chaves Pix vinculadas às suas contas do Cofry</p>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      
+      <!-- Register Key Section -->
+      <section class="lg:col-span-1 bg-white rounded-[2rem] p-8 shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-50 h-fit">
+        <h3 class="font-bold text-slate-800 text-lg mb-6 flex items-center gap-3">
+          <svg class="text-emerald-500" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/><path d="M12 8v8"/><path d="M8 12h8"/></svg>
+          Cadastrar Nova Chave
+        </h3>
+
+        <form (submit)="registerKey($event)" class="space-y-5">
+          <div>
+            <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Tipo de Chave</label>
+            <select 
+              [(ngModel)]="keyForm.tipoChave" 
+              name="tipoChave"
+              (change)="onTypeChange()"
+              required 
+              class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all outline-none cursor-pointer"
+            >
+              <option value="CPF">CPF</option>
+              <option value="TELEFONE">Telefone Celular</option>
+              <option value="EMAIL">E-mail</option>
+              <option value="ALEATORIA">Chave Aleatória</option>
+            </select>
+          </div>
+
+          <div>
+            <div class="flex justify-between items-center mb-2">
+              <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider">Valor da Chave</label>
+              <button 
+                *ngIf="keyForm.tipoChave === 'ALEATORIA'"
+                type="button"
+                (click)="generateRandomKey()"
+                class="text-xs text-emerald-600 font-bold hover:underline cursor-pointer"
+              >
+                Gerar Chave
+              </button>
+            </div>
+            <input 
+              type="text" 
+              [(ngModel)]="keyForm.valorChave" 
+              name="valorChave"
+              (input)="formatKeyInput($event)"
+              [disabled]="keyForm.tipoChave === 'ALEATORIA'"
+              required 
+              placeholder="{{ keyForm.tipoChave === 'CPF' ? '000.000.000-00' : keyForm.tipoChave === 'TELEFONE' ? '(00) 90000-0000' : keyForm.tipoChave === 'EMAIL' ? 'seu@email.com' : 'Clique em Gerar Chave' }}" 
+              class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all outline-none disabled:opacity-75 disabled:cursor-not-allowed"
+            >
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Conta Vinculada</label>
+            <select 
+              [(ngModel)]="keyForm.idConta" 
+              name="idConta"
+              required 
+              class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all outline-none cursor-pointer"
+            >
+              <option *ngFor="let acc of accounts" [value]="acc.idConta">{{ acc.instituicao }}</option>
+            </select>
+          </div>
+
+          <button type="submit" class="w-full bg-[#00A868] hover:bg-[#008f58] text-white font-bold py-3.5 px-6 rounded-xl transition-all shadow-lg shadow-emerald-250 active:scale-95 whitespace-nowrap mt-2">
+            Confirmar Cadastro
+          </button>
+        </form>
+      </section>
+
+      <!-- Key List Section -->
+      <section class="lg:col-span-2 bg-white rounded-[2rem] p-8 shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-50">
+        <h3 class="font-bold text-slate-800 text-lg mb-6">Minhas Chaves Cadastradas</h3>
+
+        <div *ngIf="pixKeys.length === 0" class="flex flex-col items-center justify-center py-12 text-center">
+          <div class="w-16 h-16 bg-slate-50 rounded-full flex items-center justify-center mb-4 text-slate-400">
+            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 18h20"/><path d="M17 12H3"/><path d="M11 6H3"/></svg>
+          </div>
+          <p class="font-bold text-slate-600">Nenhuma chave cadastrada</p>
+          <p class="text-sm text-slate-400 mt-1">Cadastre chaves ao lado para facilitar suas transferências.</p>
+        </div>
+
+        <div *ngIf="pixKeys.length > 0" class="space-y-4">
+          <div *ngFor="let key of pixKeys" class="flex items-center justify-between p-4 bg-slate-50 rounded-2xl hover:shadow-sm border border-slate-100 transition-all">
+            <div class="flex items-center gap-4">
+              <!-- Type Badge -->
+              <div class="w-12 h-12 bg-emerald-50 text-emerald-600 rounded-xl flex items-center justify-center font-bold text-xs">
+                {{ key.tipoChave }}
+              </div>
+              <div>
+                <p class="font-bold text-slate-800 break-all pr-2">{{ key.valorChave }}</p>
+                <p class="text-xs text-slate-400 font-medium">Vinculada a: <span class="text-slate-600 font-bold">{{ getAccountLabel(key.idConta) }}</span></p>
+              </div>
+            </div>
+
+            <button (click)="deleteKey(key.idChave!)" class="text-slate-400 hover:text-red-500 p-2 rounded-xl hover:bg-red-50 transition-colors">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
+            </button>
+          </div>
+        </div>
+      </section>
+      
+    </div>
+  </main>
+</div>
