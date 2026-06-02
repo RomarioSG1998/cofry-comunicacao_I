@@ -96,3 +96,20 @@ INSERT INTO transacao (id_usuario, valor, data, comprovante_url, id_categoria, i
 (1, 350.00, '2026-06-06', NULL, 7, 1, NULL),    -- Rendimentos LCI Banco do Brasil
 (1, -580.00, '2026-06-08', NULL, 1, 1, NULL),   -- Rancho Mensal BB
 (1, -120.00, '2026-06-09', NULL, 3, NULL, 3);   -- Combustível C6 Card
+
+-- Seed de Orçamentos (Orcamento por Categoria para id_usuario = 1)
+INSERT INTO orcamento (id_usuario, id_categoria, valor_limite, mes_ano) VALUES
+(1, 1, 1200.00, '2026-06'), -- Limite para Alimentação em Junho/2026
+(1, 3, 400.00, '2026-06'),  -- Limite para Transporte em Junho/2026
+(1, 4, 800.00, '2026-06');  -- Limite para Lazer em Junho/2026
+
+-- Seed de Metas de Poupança (id_usuario = 1)
+INSERT INTO meta_poupanca (id_usuario, valor_alvo, valor_atual, data_limite) VALUES
+(1, 50000.00, 15000.00, '2027-12-31'), -- Reserva de Emergência
+(1, 15000.00, 3200.00, '2026-11-30'),  -- Viagem de Férias
+(1, 8000.00, 0.00, '2027-06-30');      -- Trocar de Computador
+
+-- Seed de Logs de Auditoria (id_admin = 2 referenciando o usuário administrador)
+INSERT INTO log_auditoria (id_admin, acao, data_hora) VALUES
+(2, 'Criação de novos planos do Cofry', '2026-06-01'),
+(2, 'Homologação do ambiente de testes do usuário Romário', '2026-06-02');

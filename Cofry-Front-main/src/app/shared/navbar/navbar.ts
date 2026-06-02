@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, signal, OnInit, OnDestroy, Inject, PLATFORM_ID, ChangeDetectorRef } from '@angular/core';
-import { RouterLink, RouterLinkActive } from '@angular/router';
+import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { CommonModule, isPlatformBrowser } from '@angular/common'; 
 import { PlanService } from '../../services/plan.service';
 import { AuthService } from '../../services/auth.service';
@@ -47,6 +47,7 @@ export class Navbar implements OnInit, OnDestroy {
         private planService: PlanService,
         private authService: AuthService,
         private cdr: ChangeDetectorRef,
+        private router: Router,
         @Inject(PLATFORM_ID) private platformId: Object 
     ) {}
 
@@ -167,6 +168,14 @@ export class Navbar implements OnInit, OnDestroy {
      */
     toggleMenu(): void {
         this.menuOpen.update((value: boolean) => !value);
+    }
+
+    /**
+     * Efetua o logout do usuário.
+     */
+    logout(): void {
+        this.authService.clearUserData();
+        this.router.navigate(['/login']);
     }
     
     // Lista de itens
