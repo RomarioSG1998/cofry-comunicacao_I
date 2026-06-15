@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { environment } from '../../environments/environment';
 
 export interface CreditCard {
   idCartao?: number;
@@ -18,7 +19,7 @@ interface ApiResponse<T> {
 
 @Injectable({ providedIn: 'root' })
 export class CardService {
-  private readonly baseUrl = 'http://localhost:8082/api/credit-cards';
+  private readonly baseUrl = `${environment.apiUrl}/api/credit-cards`;
 
   constructor(private http: HttpClient) {}
 

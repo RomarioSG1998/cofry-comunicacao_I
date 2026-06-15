@@ -14,40 +14,37 @@ import { Extrato } from './pages/extrato/extrato';
 import { MainLayout } from './shared/layout/main-layout';
 import { TransactionListComponent } from './pages/transaction-list/transaction-list.component';
 import { PixKeysComponent } from './pages/pix-keys/pix-keys.component';
-
-
+import { authGuard } from './guards/auth.guard';
 
 export const routes: Routes = [
     { path: '', component: Home },      // Rota de abertura
     { path: 'login', component: Login },
     { path: 'Login', component: Login }, // Mantido para compatibilidade
     { path: 'cadastrar', component: SignUp },
-    { path: 'Cadastrar', component: SignUp }, // Mantido para compatibilidade3
-    { path: 'transation', component: TransactionListComponent},
-    
-    // Rota de Layout Principal (Com Navbar)
+    { path: 'Cadastrar', component: SignUp }, // Mantido para compatibilidade
+
+    // Rota de Layout Principal (Com Navbar) — protegida pelo AuthGuard
     {
-      
-        path: 'nav', 
-        component: MainLayout, 
+        path: 'nav',
+        component: MainLayout,
+        canActivate: [authGuard],
         children: [
-            // Rotas de Conteúdo
-            { path: '', redirectTo: 'home', pathMatch: 'full' }, 
-            { path: 'home', component: AfterLogin },
-            { path: 'Home', component: AfterLogin }, // Mantido para compatibilidade
-            { path: 'Cards', component: Cards },
-            { path: 'Invest', component: Invest },
-            { path: 'Plans', component: Plans },
-            { path: 'Dda', component: Boletos }, // Embora 'Cadastrar' seja mais comum fora do layout logado, mantive aqui
-            { path: 'Pix', component: Pix },
-            { path: 'Pagar', component: Pagar },
-            { path: 'Transferir', component: Transferir },
-            { path: 'Extrato', component: TransactionListComponent },
+            { path: '', redirectTo: 'home', pathMatch: 'full' },
+            { path: 'home',          component: AfterLogin },
+            { path: 'Home',          component: AfterLogin }, // compatibilidade
+            { path: 'Cards',         component: Cards },
+            { path: 'Invest',        component: Invest },
+            { path: 'Plans',         component: Plans },
+            { path: 'Dda',           component: Boletos },
+            { path: 'Pix',           component: Pix },
+            { path: 'Pagar',         component: Pagar },
+            { path: 'Transferir',    component: Transferir },
+            { path: 'Extrato',       component: TransactionListComponent },
             { path: 'Minhas-Chaves', component: PixKeysComponent },
             { path: 'minhas-chaves', component: PixKeysComponent }
         ]
     },
-    
-    // Rota de Fallback (Opcional, mas recomendado para URLs inválidas)
+
+    // Fallback
     { path: '**', redirectTo: '' }
 ];

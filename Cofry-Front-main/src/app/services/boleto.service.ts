@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { environment } from '../../environments/environment';
 
 export interface BoletoDDA {
   idBoleto?: number;
@@ -19,7 +20,7 @@ interface ApiResponse<T> {
 
 @Injectable({ providedIn: 'root' })
 export class BoletoService {
-  private readonly baseUrl = 'http://localhost:8082/api/boletos';
+  private readonly baseUrl = `${environment.apiUrl}/api/boletos`;
 
   constructor(private http: HttpClient) {}
 

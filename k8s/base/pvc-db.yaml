@@ -1,0 +1,21 @@
+# ================================================================
+# PersistentVolumeClaim: dados persistentes do Postgres
+# O StorageClass padrão do cluster provisionará o volume
+# automaticamente (funciona em GKE, EKS, AKS, kind, minikube…)
+# ================================================================
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: cofry-db-pvc
+  namespace: cofry
+  labels:
+    app: cofry-db
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi
+  # Remova storageClassName para usar o padrão do cluster,
+  # ou especifique: gp2 (EKS), standard (GKE/minikube), etc.
+  # storageClassName: standard

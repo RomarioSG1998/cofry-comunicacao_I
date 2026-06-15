@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: cofry
+  labels:
+    app.kubernetes.io/name: cofry
+    environment: production

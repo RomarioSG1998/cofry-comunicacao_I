@@ -57,13 +57,11 @@ export class SignUp {
   }
 
   onSubmit() {
-    // 1. Verifica se o form está válido visualmente
-    /*
+    // Valida o formulário antes de enviar
     if (this.signupForm.invalid) {
-      this.signupForm.markAllAsTouched(); // Mostra os erros vermelhos na tela
+      this.signupForm.markAllAsTouched();
       return;
     }
-    */
 
     // 2. Prepara o objeto para o Java (JSON)
     // O Java espera os nomes exatos das variáveis da classe User

@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cofry-backend-config
+  namespace: cofry
+data:
+  # URL interna do Postgres dentro do cluster
+  # Formato: jdbc:postgresql://<service-name>.<namespace>.svc.cluster.local:<port>/<db>
+  DB_URL: "jdbc:postgresql://cofry-db-svc.cofry.svc.cluster.local:5432/postgres"

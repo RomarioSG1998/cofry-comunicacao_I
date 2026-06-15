@@ -1,0 +1,132 @@
+# ================================================================
+# Deployment: Java/Tomcat Backend (cofry-backend)
+#
+# IMPORTANTE: antes de aplicar, faça o push da imagem para
+# um registry acessível pelo cluster:
+#
+#   docker build -t <seu-registry>/cofry-backend:latest ./Cofry-Backend-patrick
+#   docker push <seu-registry>/cofry-backend:latest
+#
+# Depois substitua a tag da imagem abaixo.
+# ================================================================
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cofry-backend
+  namespace: cofry
+  labels:
+    app: cofry-backend
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: cofry-backend
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  template:
+    metadata:
+      labels:
+        app: cofry-backend
+    spec:
+      # Aguarda o Postgres estar pronto antes de iniciar o backend
+      initContainers:
+        - name: wait-for-db
+          image: busybox:1.36
+          command:
+            - sh
+            - -c
+            - |
+              until nc -z cofry-db-svc 5432; do
+                echo "Aguardando Postgres...";
+                sleep 2;
+              done;
+              echo "Postgres disponível!"
+      containers:
+        - name: cofry-backend
+          # Troque pela sua imagem após o push para o registry
+          image: cofry-backend:latest
+          imagePullPolicy: IfNotPresent   # Use "Always" em produção com registry externo
+          ports:
+            - containerPort: 8082
+          env:
+            - name: DB_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: cofry-backend-config
+                  key: DB_URL
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: cofry-db-secret
+                  key: POSTGRES_USER
+            - name: DB_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: cofry-db-secret
+                  key: POSTGRES_PASSWORD
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8082
+            initialDelaySeconds: 30
+            periodSeconds: 15
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8082
+            initialDelaySeconds: 15
+            periodSeconds: 10
+          resources:
+            requests:
+              cpu: "250m"
+              memory: "512Mi"
+            limits:
+              cpu: "1000m"
+              memory: "1Gi"
+---
+# ================================================================
+# Service: Backend — ClusterIP (acessado apenas pelo frontend)
+# ================================================================
+apiVersion: v1
+kind: Service
+metadata:
+  name: cofry-backend-svc
+  namespace: cofry
+  labels:
+    app: cofry-backend
+spec:
+  type: ClusterIP
+  selector:
+    app: cofry-backend
+  ports:
+    - name: http
+      port: 8082
+      targetPort: 8082
+---
+# ================================================================
+# HorizontalPodAutoscaler: escala o backend de 2 a 5 réplicas
+# conforme a utilização de CPU (ativa quando > 60%)
+# ================================================================
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: cofry-backend-hpa
+  namespace: cofry
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: cofry-backend
+  minReplicas: 2
+  maxReplicas: 5
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 60

@@ -3,7 +3,6 @@ import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { TransactionService } from '../../services/transaction.service';
-import { UserService } from '../../services/user.service';
 import { AccountService, Account } from '../../services/account.service';
 import { TransactionCardComponent } from '../../shared/transaction-card/transaction-card';
 import { Transaction } from '../../models/transaction.model';
@@ -23,7 +22,6 @@ export class AfterLogin implements OnInit {
   // Injeção de dependências
   private router = inject(Router);
   private transactionService = inject(TransactionService);
-  private userService = inject(UserService);
   private accountService = inject(AccountService);
   private platformId = inject(PLATFORM_ID);
 
@@ -46,41 +44,22 @@ export class AfterLogin implements OnInit {
   }
 
   ngOnInit(): void {
-    console.log('AfterLogin - ngOnInit iniciado');
-    
     if (!isPlatformBrowser(this.platformId)) {
-      console.log('AfterLogin - SSR detectado, retornando');
-      return; // Não faz nada no SSR
+      return;
     }
 
-    const userEmail = localStorage.getItem('userEmail');
     const storedUserData = localStorage.getItem('userData');
-
-    console.log('AfterLogin - Dados do usuário:', { userEmail, storedUserData });
-
     if (storedUserData) {
       try {
         this.userData = JSON.parse(storedUserData);
-        console.log('AfterLogin - userData parseado:', this.userData);
       } catch (error) {
         console.error('AfterLogin - Erro ao parsear dados do usuário:', error);
       }
     }
 
-    if (userEmail) {
-      this.loadUserData(userEmail);
-      this.loadAccounts();
-    }
-
-    // Carregar transações (chamada principal) - com tratamento de erro para não quebrar a página
-    try {
-      this.loadTransactions();
-    } catch (error) {
-      console.error('AfterLogin - Erro ao inicializar transações:', error);
-      this.transactions = [];
-    }
-    
-    console.log('AfterLogin - ngOnInit concluído');
+    // Carrega contas (calcula saldo total) e transações recentes
+    this.loadAccounts();
+    this.loadTransactions();
   }
 
   loadAccounts(): void {
@@ -178,45 +157,13 @@ export class AfterLogin implements OnInit {
     }
   }
 
-  loadUserData(email: string): void {
-    this.userService.fetch<any>(email).subscribe({
-      next: (res) => {
-        console.log('Dados completos do usuário carregados:', res);
-        if (res && res.data) {
-          const accounts = res.data.accounts;
-          if (Array.isArray(accounts) && accounts.length > 0) {
-            let total = 0;
-            accounts.forEach((acc: any) => {
-              if (acc.saldo) {
-                total += Number(acc.saldo);
-              }
-            });
-            this.balance = total.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-          } else {
-            this.balance = '0,00';
-          }
-        }
-      },
-      error: (err) => {
-        console.error('Erro ao carregar dados do usuário:', err);
-      }
-    });
-  }
 
   loadTransactions(): void {
     this.transactionService.getTransactionsByUser(5, 0).subscribe({
       next: (data) => {
-        console.log('Transações carregadas:', data);
-        if (Array.isArray(data)) {
-          this.transactions = data;
-        } else {
-          console.warn('Dados de transações não são um array:', data);
-          this.transactions = [];
-        }
+        this.transactions = Array.isArray(data) ? data : [];
       },
-      error: (error) => {
-        console.error('Erro ao carregar transações:', error);
-        // Se der erro, simplesmente mantém o array vazio para não quebrar a página
+      error: () => {
         this.transactions = [];
       }
     });

@@ -4,6 +4,7 @@ import { AuthService } from './auth.service';
 import { Transaction } from '../models/transaction.model';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { environment } from '../../environments/environment';
 
 interface BackendTransaction {
   idTrans: number;
@@ -25,7 +26,7 @@ interface ApiResponse<T> {
 @Injectable({ providedIn: 'root' })
 export class TransactionService {
 
-  private apiUrl = 'http://localhost:8082/api/transactions';
+  private apiUrl = `${environment.apiUrl}/api/transactions`;
 
   constructor(
     private http: HttpClient,
@@ -55,19 +56,24 @@ export class TransactionService {
     return this.http.post<any>(this.apiUrl, transaction);
   }
 
+  updateTransaction(id: number, transaction: any): Observable<any> {
+    return this.http.put<any>(`${this.apiUrl}/${id}`, transaction);
+  }
+
   deleteTransaction(id: number): Observable<any> {
     return this.http.delete<any>(`${this.apiUrl}/${id}`);
   }
 
+  // CORRIGIDO: era /api/categories, o endpoint correto é /api/transaction-categories
   getCategories(): Observable<any[]> {
-    return this.http.get<ApiResponse<any[]>>('http://localhost:8082/api/categories').pipe(
+    return this.http.get<ApiResponse<any[]>>(`${environment.apiUrl}/api/transaction-categories`).pipe(
       map(res => res.data || [])
     );
   }
 
   getAccountsByUser(): Observable<any[]> {
     const userId = this.authService.getUserId();
-    return this.http.get<ApiResponse<any[]>>(`http://localhost:8082/api/accounts/user/${userId}`).pipe(
+    return this.http.get<ApiResponse<any[]>>(`${environment.apiUrl}/api/accounts/user/${userId}`).pipe(
       map(res => res.data || [])
     );
   }

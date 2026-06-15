@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { AuthService } from './auth.service';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { environment } from '../../environments/environment';
 
 export interface Account {
   idConta?: number;
@@ -19,7 +20,7 @@ interface ApiResponse<T> {
 
 @Injectable({ providedIn: 'root' })
 export class AccountService {
-  private apiUrl = 'http://localhost:8082/api/accounts';
+  private apiUrl = `${environment.apiUrl}/api/accounts`;
 
   constructor(
     private http: HttpClient,

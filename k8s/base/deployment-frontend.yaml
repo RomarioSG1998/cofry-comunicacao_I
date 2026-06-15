@@ -1,0 +1,108 @@
+# ================================================================
+# Deployment: Angular SSR Frontend (cofry-frontend)
+#
+# IMPORTANTE: antes de aplicar, faça o push da imagem para
+# um registry acessível pelo cluster:
+#
+#   docker build -t <seu-registry>/cofry-frontend:latest ./Cofry-Front-main
+#   docker push <seu-registry>/cofry-frontend:latest
+#
+# Depois substitua a tag da imagem abaixo.
+# ================================================================
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cofry-frontend
+  namespace: cofry
+  labels:
+    app: cofry-frontend
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: cofry-frontend
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  template:
+    metadata:
+      labels:
+        app: cofry-frontend
+    spec:
+      containers:
+        - name: cofry-frontend
+          # Troque pela sua imagem após o push para o registry
+          image: cofry-frontend:latest
+          imagePullPolicy: IfNotPresent   # Use "Always" em produção com registry externo
+          ports:
+            - containerPort: 4000
+          env:
+            - name: PORT
+              value: "4000"
+            - name: HOST
+              value: "0.0.0.0"
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 4000
+            initialDelaySeconds: 20
+            periodSeconds: 15
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 4000
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "256Mi"
+            limits:
+              cpu: "500m"
+              memory: "512Mi"
+---
+# ================================================================
+# Service: Frontend — LoadBalancer
+# Em cloud (GKE, EKS, AKS) isso cria um IP público.
+# Em ambientes locais (minikube/kind), use NodePort ou Ingress.
+# ================================================================
+apiVersion: v1
+kind: Service
+metadata:
+  name: cofry-frontend-svc
+  namespace: cofry
+  labels:
+    app: cofry-frontend
+spec:
+  type: LoadBalancer
+  selector:
+    app: cofry-frontend
+  ports:
+    - name: http
+      port: 80
+      targetPort: 4000
+---
+# ================================================================
+# HorizontalPodAutoscaler: escala o frontend de 2 a 6 réplicas
+# ================================================================
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: cofry-frontend-hpa
+  namespace: cofry
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: cofry-frontend
+  minReplicas: 2
+  maxReplicas: 6
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 60

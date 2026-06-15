@@ -19,7 +19,7 @@ INSERT INTO categoria (nome, tipo, icone) VALUES
 
 -- Seed de Usuário de Teste Único (Senha: '123456' em hash BCrypt)
 INSERT INTO usuario (nome, email, senha_hash, tipo_usuario) VALUES 
-('Romário Jala', 'romario@cofry.com', '$2a$10$tM6n.iZ1bU1h6gA33mO52OxzI5jZ7a2xL09hQ4xKjW2/ZtJ6/3H6O', 'usuario');
+('Romário Jala', 'romario@cofry.com', '$2a$12$mGmbUbHOVwT6zTCDB4J38OC6Ybxx1gHZzVxwerqI8aRocIESLUw2W', 'usuario');
 
 -- Seed de Contas para o Usuário de Teste (id_usuario = 1)
 INSERT INTO conta (id_usuario, saldo, instituicao) VALUES 

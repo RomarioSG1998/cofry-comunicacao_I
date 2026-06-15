@@ -175,7 +175,7 @@ export class Navbar implements OnInit, OnDestroy {
      */
     logout(): void {
         this.authService.clearUserData();
-        this.router.navigate(['/login']);
+        this.router.navigate(['/']);
     }
     
     // Lista de itens

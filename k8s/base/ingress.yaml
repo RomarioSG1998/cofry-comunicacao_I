@@ -1,0 +1,55 @@
+# ================================================================
+# Ingress: roteamento HTTP por path (requer ingress-controller)
+#
+# Instalar NGINX Ingress Controller (uma vez por cluster):
+#   kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.10.1/deploy/static/provider/cloud/deploy.yaml
+#
+# Para clusters locais (minikube):
+#   minikube addons enable ingress
+# ================================================================
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: cofry-ingress
+  namespace: cofry
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    # Habilitar HTTPS com cert-manager (opcional):
+    # cert-manager.io/cluster-issuer: letsencrypt-prod
+spec:
+  # ingressClassName: nginx  # Descomente se o cluster exigir
+  rules:
+    # Substitua pelo seu domínio real (ou IP do LoadBalancer)
+    - host: cofry.seudominio.com
+      http:
+        paths:
+          # Todo tráfego de / vai para o frontend
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: cofry-frontend-svc
+                port:
+                  number: 80
+          # Tráfego /api/* e /login vai direto para o backend
+          - path: /api
+            pathType: Prefix
+            backend:
+              service:
+                name: cofry-backend-svc
+                port:
+                  number: 8082
+          - path: /login
+            pathType: Exact
+            backend:
+              service:
+                name: cofry-backend-svc
+                port:
+                  number: 8082
+          - path: /auth
+            pathType: Prefix
+            backend:
+              service:
+                name: cofry-backend-svc
+                port:
+                  number: 8082

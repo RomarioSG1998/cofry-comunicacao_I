@@ -1,0 +1,89 @@
+# ================================================================
+# StatefulSet: Postgres 15
+# Usamos StatefulSet (não Deployment) para garantir identidade
+# estável do pod e montagem correta do volume persistente.
+# ================================================================
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: cofry-db
+  namespace: cofry
+  labels:
+    app: cofry-db
+spec:
+  serviceName: cofry-db-svc
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cofry-db
+  template:
+    metadata:
+      labels:
+        app: cofry-db
+    spec:
+      containers:
+        - name: postgres
+          image: postgres:15-alpine
+          ports:
+            - containerPort: 5432
+          env:
+            - name: POSTGRES_DB
+              valueFrom:
+                secretKeyRef:
+                  name: cofry-db-secret
+                  key: POSTGRES_DB
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: cofry-db-secret
+                  key: POSTGRES_USER
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: cofry-db-secret
+                  key: POSTGRES_PASSWORD
+          volumeMounts:
+            - name: db-storage
+              mountPath: /var/lib/postgresql/data
+          livenessProbe:
+            exec:
+              command: ["pg_isready", "-U", "postgres"]
+            initialDelaySeconds: 15
+            periodSeconds: 10
+            failureThreshold: 5
+          readinessProbe:
+            exec:
+              command: ["pg_isready", "-U", "postgres"]
+            initialDelaySeconds: 5
+            periodSeconds: 5
+          resources:
+            requests:
+              cpu: "250m"
+              memory: "256Mi"
+            limits:
+              cpu: "500m"
+              memory: "512Mi"
+      volumes:
+        - name: db-storage
+          persistentVolumeClaim:
+            claimName: cofry-db-pvc
+---
+# ================================================================
+# Service: acesso interno ao Postgres (ClusterIP)
+# Outros pods acessam via: cofry-db-svc.cofry.svc.cluster.local
+# ================================================================
+apiVersion: v1
+kind: Service
+metadata:
+  name: cofry-db-svc
+  namespace: cofry
+  labels:
+    app: cofry-db
+spec:
+  type: ClusterIP
+  selector:
+    app: cofry-db
+  ports:
+    - name: postgres
+      port: 5432
+      targetPort: 5432

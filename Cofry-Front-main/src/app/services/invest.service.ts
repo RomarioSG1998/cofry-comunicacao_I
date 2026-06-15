@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { environment } from '../../environments/environment';
 
 export interface Investment {
   idInvest?: number;
@@ -19,7 +20,7 @@ interface ApiResponse<T> {
 
 @Injectable({ providedIn: 'root' })
 export class InvestService {
-  private readonly baseUrl = 'http://localhost:8082/api/investments';
+  private readonly baseUrl = `${environment.apiUrl}/api/investments`;
 
   constructor(private http: HttpClient) {}
 
