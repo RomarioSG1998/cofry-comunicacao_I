@@ -47,8 +47,8 @@ spec:
       containers:
         - name: cofry-backend
           # Troque pela sua imagem após o push para o registry
-          image: cofry-backend:latest
-          imagePullPolicy: IfNotPresent   # Use "Always" em produção com registry externo
+          image: ghcr.io/romariosg1998/cofry-backend:latest
+          imagePullPolicy: Always
           ports:
             - containerPort: 8082
           env:
